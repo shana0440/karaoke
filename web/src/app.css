@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+    @apply text-white bg-jet;
+}
+
+@layer components {
+    .input {
+        @apply bg-gunmetal text-light-grey border border-cod-gray rounded flex gap-2 focus-within:outline outline-sky-blue items-center min-h-[40px] px-2;
+    }
+
+    .input input {
+        @apply w-full text-lg bg-transparent outline-none;
+    }
+}

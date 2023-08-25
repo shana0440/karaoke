@@ -1,0 +1,14 @@
+<script lang="ts">
+  import { onMount } from "svelte";
+  import YoutubePlayer from "youtube-player";
+
+  export let id: string;
+  export let player: ReturnType<typeof YoutubePlayer>;
+
+  onMount(() => {
+    player = YoutubePlayer("player");
+    player.loadVideoById(id);
+  });
+</script>
+
+<div id="player" />
