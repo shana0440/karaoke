@@ -35,8 +35,16 @@ import numpy as np
 KARAOKE_DATASET_PATH = "dataset/karaoke"
 
 SAMPLE_RATE = 22050
-DURATION = 3
+DURATION = 5
 SAMPLES_PER_TRACK = SAMPLE_RATE * DURATION
+
+
+def extract_youtube_id(url):
+    start = url.find("v=") + 2
+    end = url.find("&", start)
+    if end == -1:
+        end = len(url)
+    return url[start:end]
 
 
 if __name__ == "__main__":
@@ -58,8 +66,9 @@ if __name__ == "__main__":
     result = []
 
     for i, stream in enumerate(KARAOKE_DATASET):
-        name, out_name = ("{}/karaoke{}".format(KARAOKE_DATASET_PATH, i), "{}/karaoke{}_out".format(KARAOKE_DATASET_PATH, i))
-        subprocess.run(["yt-dlp", stream, "-o", name])
+        id = extract_youtube_id(stream)
+        name, out_name = ("{}/karaoke_{}".format(KARAOKE_DATASET_PATH, id), "{}/karaoke_{}_out".format(KARAOKE_DATASET_PATH, id))
+        subprocess.run(["yt-dlp", "-f", "wv", "-f", "ba", stream, "-o", "{}.webm".format(name)])
         subprocess.run(["ffmpeg", "-n", "-i", "{}.webm".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
         subprocess.run(["ffmpeg", "-n", "-i", "{}.mkv".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
         subprocess.run(["ffmpeg", "-n", "-i", "{}.wav".format(name), "-f", "segment", "-segment_time", duration, "-c", "copy", "{}%04d.wav".format(out_name)])
