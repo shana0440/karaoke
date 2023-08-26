@@ -12,8 +12,7 @@
   export let currentTime: number;
   export let windows: [number, number] = [...domain];
   export let onCurrentTimeChange: (time: number) => void;
-
-  let songs: Song[] = [{ range: [60, 240] }, { range: [260, 440] }];
+  export let songs: Song[];
 
   let container: HTMLDivElement;
   let scale: Scale;
@@ -32,9 +31,9 @@
 <div class="overflow-hidden">
   <div class="flex">
     <div>
-      <div class="h-10" />
+      <div class="h-10 w-96" />
       {#each songs as song}
-        <div class="h-12 px-2 py-1">
+        <div class="h-[50px] px-2 py-1 -mt-[1px] border border-light-grey">
           <input
             class="bg-transparent"
             bind:value={song.name}
@@ -42,7 +41,9 @@
           />
           <div class="text-sm text-light-grey">
             <TimeFormat value={song.range[0]} />
+            ~
             <TimeFormat value={song.range[1]} />
+            (<TimeFormat value={song.range[1] - song.range[0]} />)
           </div>
         </div>
       {/each}
