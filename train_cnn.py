@@ -98,7 +98,7 @@ if __name__ == "__main__":
     model.summary()
 
     # train the CNN
-    history = model.fit(x_train, y_train, validation_data=(x_validation, y_validation), epochs=50, batch_size=32)
+    history = model.fit(x_train, y_train, validation_data=(x_validation, y_validation), epochs=30, batch_size=32)
 
     # evaluate the CNN on the test set
     test_error, test_accuracy = model.evaluate(x_test, y_test, verbose=1)

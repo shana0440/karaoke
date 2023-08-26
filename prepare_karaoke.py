@@ -115,7 +115,7 @@ ZATSUDAN_DATASET_PATH = "dataset/zatsudan"
 JSON_PATH = "dataset/karaoke.json"
 
 SAMPLE_RATE = 22050
-DURATION = 5
+DURATION = 2
 SAMPLES_PER_TRACK = SAMPLE_RATE * DURATION
 
 
@@ -149,8 +149,11 @@ if __name__ == "__main__":
         name, out_name = ("{}/song_{}".format(SONG_DATASET_PATH, id), "{}/song_{}_out".format(SONG_DATASET_PATH, id))
         subprocess.run(["yt-dlp", "-f", "wv", "-f", "ba", song, "-o", "{}.webm".format(name)])
         subprocess.run(["ffmpeg", "-n", "-i", "{}.webm".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
-        subprocess.run(["ffmpeg", "-n", "-i", "{}.mkv".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
-        subprocess.run(["ffmpeg", "-n", "-i", "{}.wav".format(name), "-f", "segment", "-segment_time", duration, "-c", "copy", "{}%04d.wav".format(out_name)])
+        result = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", "{}.wav".format(name)], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        total_duration = float(result.stdout)
+        trim_duration = total_duration - 10
+        subprocess.run(["ffmpeg", "-y", "-i", "{}.wav".format(name), "-ss", "5", "-t", str(trim_duration), "{}_trimmed.wav".format(name)]) 
+        subprocess.run(["ffmpeg", "-n", "-i", "{}_trimmed.wav".format(name), "-f", "segment", "-segment_time", duration, "-c", "copy", "{}%04d.wav".format(out_name)])
 
         out_files = [f for f in os.listdir(SONG_DATASET_PATH) if os.path.basename(out_name) in f]
         for filename in out_files:
@@ -173,7 +176,6 @@ if __name__ == "__main__":
         id = extract_youtube_id(song);
         name, out_name = ("{}/zatsudan_{}".format(ZATSUDAN_DATASET_PATH, id), "{}/zatsudan_{}_out".format(ZATSUDAN_DATASET_PATH, id))
         subprocess.run(["yt-dlp", "-f", "wv", "-f", "ba", song, "-o", "{}.webm".format(name)])
-        subprocess.run(["ffmpeg", "-n", "-i", "{}.mkv".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
         subprocess.run(["ffmpeg", "-n", "-i", "{}.webm".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
         subprocess.run(["ffmpeg", "-n", "-i", "{}.wav".format(name), "-f", "segment", "-segment_time", duration, "-c", "copy", "{}%04d.wav".format(out_name)])
 
