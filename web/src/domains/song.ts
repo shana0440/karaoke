@@ -1,4 +1,5 @@
 export interface Song {
     name?: string,
-    range: [number, number]
+    range: [number, number],
+    selected: boolean;
 }

@@ -2,14 +2,17 @@ import { onMount } from 'svelte';
 import { writable, get } from 'svelte/store'
 
 export const useDrag = (onMove: (delta: number) => void, onDropped?: (delta: number) => void) => {
+  const isMoved = writable(false);
   const moving = writable(false);
   const prevClientX = writable(0);
   const drag = (e: MouseEvent) => {
     moving.update(() => true);
     prevClientX.update(() => e.clientX);
+    isMoved.update(() => false);
   }
   const move = (e: MouseEvent) => {
     if (get(moving)) {
+      isMoved.update(() => true);
       prevClientX.update((prev) => {
         onMove(e.clientX - prev);
         return e.clientX;
@@ -35,5 +38,11 @@ export const useDrag = (onMove: (delta: number) => void, onDropped?: (delta: num
       window.removeEventListener("mouseup", drop);
     };
   });
-  return { moving: { subscribe: moving.subscribe }, drag, move, drop }
+  return {
+    moving: { subscribe: moving.subscribe },
+    isMoved: { subscribe: isMoved.subscribe },
+    drag,
+    move,
+    drop,
+  }
 }

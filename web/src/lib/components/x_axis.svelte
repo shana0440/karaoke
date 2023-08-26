@@ -9,6 +9,7 @@
 
   export let scale: Scale;
   export let onCurrentTimeChange: (time: number) => void;
+  export let onWheel: (e: WheelEvent) => void;
 
   let axis: HTMLDivElement;
 
@@ -38,6 +39,7 @@
   tabindex="-1"
   class="flex w-full h-10"
   on:mousedown={updateCurrentTime}
+  on:wheel={onWheel}
   bind:this={axis}
 >
   {#each interval as value}

@@ -13,13 +13,25 @@
   export let scale: Scale;
   export let domain: [number, number];
   export let name: string | undefined;
+  export let selected = false;
+  type Movable = 0 | 1 | "both";
+  let moving: Option<Movable> = none;
 
-  let moving: Option<0 | 1> = none;
+  const moveWindow = (index: 0 | 1) => (delta: number) => {
+    const newValue = domain[index] + calculateViewDomainDelta(scale, delta);
+    domain[index] = constrainDomain(scale, newValue);
+    domain = [...domain];
+  };
 
-  const { drag: _drag } = useDrag(
+  const { isMoved, drag: _drag } = useDrag(
     (delta) => {
       if (isSome(moving)) {
-        moveWindow(moving.value)(delta);
+        if (moving.value === "both") {
+          moveWindow(0)(delta);
+          moveWindow(1)(delta);
+        } else {
+          moveWindow(moving.value)(delta);
+        }
       }
     },
     () => {
@@ -27,17 +39,15 @@
     }
   );
 
-  const drag = (index: 0 | 1) => (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const drag = (index: Movable) => (e: MouseEvent) => {
     moving = some(index);
     _drag(e);
   };
 
-  const moveWindow = (index: 0 | 1) => (delta: number) => {
-    const newValue = domain[index] + calculateViewDomainDelta(scale, delta);
-    domain[index] = constrainDomain(scale, newValue);
-    domain = [...domain];
+  const selectThumb = (e: MouseEvent) => {
+    if (!$isMoved) {
+      selected = !selected;
+    }
   };
 
   $: range = mapViewDomainToRange(scale, domain);
@@ -46,13 +56,21 @@
 <div class="track relative py-1 border border-light-grey -mt-[1px]">
   <div
     style={`${toTranslate(range)}${toWidth(range)}`}
-    class="flex w-10 gap-1 bg-red-500 rounded"
+    class={`flex gap-1 rounded ${
+      selected ? "bg-dodger-blue" : "bg-purple-taupe"
+    }`}
   >
-    <button class="p-1 cursor-col-resize" on:mousedown={drag(0)}>
+    <button class="h-10 p-1 cursor-col-resize" on:mousedown={drag(0)}>
       <div class="w-1 h-full rounded-full bg-white/60" />
     </button>
-    <span class="flex-1 h-10 py-2 truncate">{name ?? ""}</span>
-    <button class="p-1 cursor-col-resize" on:mousedown={drag(1)}>
+    <button
+      on:click={selectThumb}
+      on:mousedown={drag("both")}
+      class="flex-1 h-10 py-2 truncate"
+    >
+      {name ?? ""}
+    </button>
+    <button class="h-10 p-1 cursor-col-resize" on:mousedown={drag(1)}>
       <div class="w-1 h-full rounded-full bg-white/60" />
     </button>
   </div>

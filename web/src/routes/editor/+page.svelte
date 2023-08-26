@@ -10,16 +10,7 @@
   let player: YouTubePlayer;
   let duration: number = 0;
   let currentTime: number = 0;
-  let songs: Song[] = [
-    {
-      name: "hello",
-      range: [100, 200],
-    },
-    {
-      name: "hello2",
-      range: [201, 300],
-    },
-  ];
+  let songs: Song[] = [];
   let loading = false;
 
   const udpateYoutubeCurrentTime = (time: number) => {
@@ -40,9 +31,11 @@
     })
       .then((res) => res.json())
       .then((res) => {
-        songs = res.timeslots.map((timeslot: [number, number]) => ({
-          range: timeslot,
-        }));
+        songs = res.timeslots
+          .filter((timeslot: [number, number]) => timeslot[0] < duration)
+          .map((timeslot: [number, number]) => ({
+            range: timeslot,
+          }));
       })
       .finally(() => {
         loading = false;
@@ -54,7 +47,6 @@
       window.location.href = "/";
     }
     player.on("stateChange", async (e) => {
-      console.log("stateChange");
       player.getDuration().then((value) => {
         duration = value;
       });
@@ -79,9 +71,8 @@
 
 <div class="flex flex-col w-screen overflow-hidden">
   <Youtube {id} bind:player />
-  <button
-    class="px-2 py-1 transition rounded bg-purple-taupe hover:scale-105"
-    on:click={handlePredict}>{loading ? "Loading..." : "Predict"}</button
+  <button class="btn" on:click={handlePredict}
+    >{loading ? "Loading..." : "Predict"}</button
   >
   {#if duration}
     <Timeline
