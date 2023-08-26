@@ -10,10 +10,21 @@
   let player: YouTubePlayer;
   let duration: number = 0;
   let currentTime: number = 0;
-  let songs: Song[] = [];
+  let songs: Song[] = [
+    {
+      name: "hello",
+      range: [100, 200],
+    },
+    {
+      name: "hello2",
+      range: [201, 300],
+    },
+  ];
   let loading = false;
 
   const udpateYoutubeCurrentTime = (time: number) => {
+    // update current time directly to avoid the jitter
+    currentTime = time;
     player.seekTo(time, true);
   };
 

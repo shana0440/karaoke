@@ -54,7 +54,7 @@
       bind:this={container}
     >
       {#if scale}
-        <Indicator {scale} value={currentTime} />
+        <Indicator {scale} value={currentTime} {onCurrentTimeChange} />
         <XAxis {scale} {onCurrentTimeChange} />
         {#each songs as song}
           <Track bind:domain={song.range} {scale} name={song.name} />
