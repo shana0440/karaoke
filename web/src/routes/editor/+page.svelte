@@ -51,7 +51,7 @@
         duration = value;
       });
     });
-    const updateCurrentTime = (e: MessageEvent<string>) => {
+    const subscribeCurrentTimeUpdated = (e: MessageEvent<string>) => {
       try {
         const data = JSON.parse(e.data);
         // "{\"event\":\"infoDelivery\",\"info\":{\"currentTime\":3850.575187,\"videoBytesLoaded\":0.6524905538441726,\"videoLoadedFraction\":0.6524905538441726,\"currentTimeLastUpdated_\":1692837082.604,\"playbackRate\":1,\"mediaReferenceTime\":3850.575541},\"id\":6,\"channel\":\"widget\"}"
@@ -62,9 +62,9 @@
         // ignore error, becuase not every message is come from youtube iframe
       }
     };
-    window.addEventListener("message", updateCurrentTime);
+    window.addEventListener("message", subscribeCurrentTimeUpdated);
     return () => {
-      window.removeEventListener("message", updateCurrentTime);
+      window.removeEventListener("message", subscribeCurrentTimeUpdated);
     };
   });
 </script>

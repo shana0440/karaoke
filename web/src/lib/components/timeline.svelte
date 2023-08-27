@@ -12,23 +12,17 @@
   import XAxis from "./x_axis.svelte";
   import TimeFormat from "./time_format.svelte";
   import Indicator from "./indicator.svelte";
-  import type { Song } from "../../domains/song";
+  import { makeEmptySong, type Song } from "../../domains/song";
   import { Icon, Play } from "svelte-hero-icons";
+  import ContextMenu from "./context_menu.svelte";
 
   export let domain: [number, number];
   export let currentTime: number;
-  export let windows: [number, number] = [...domain];
   export let onCurrentTimeChange: (time: number) => void;
   export let songs: Song[];
 
   let container: HTMLDivElement;
   let scale: Scale;
-
-  $: {
-    if (scale) {
-      scale = reScale(scale, windows);
-    }
-  }
 
   const playSong = (song: Song) => () => {
     onCurrentTimeChange(song.range[0]);
@@ -76,16 +70,16 @@
   };
 
   const moveSlider = (deltaX: number) => {
-    const newStart = constrainDomain(scale, windows[0] + deltaX);
-    const newEnd = constrainDomain(scale, windows[1] + deltaX);
+    const newStart = constrainDomain(scale, scale.viewDomain[0] + deltaX);
+    const newEnd = constrainDomain(scale, scale.viewDomain[1] + deltaX);
     const newWindows = [newStart, newEnd] as [number, number];
-    windows = newWindows;
+    scale = reScale(scale, newWindows);
   };
 
   const scaleTimeline = (deltaY: number, scaleTo: number) => {
     const [scaleToDomain, _] = mapRangeToViewDomain(scale, [scaleTo, scaleTo]);
-    const newStart = constrainDomain(scale, windows[0] - deltaY);
-    const newEnd = constrainDomain(scale, windows[1] + deltaY);
+    const newStart = constrainDomain(scale, scale.viewDomain[0] - deltaY);
+    const newEnd = constrainDomain(scale, scale.viewDomain[1] + deltaY);
     const newWindows = [newStart, newEnd] as [number, number];
     const newScale = reScale(scale, newWindows);
     const [newScaleToDomain, __] = mapRangeToViewDomain(newScale, [
@@ -95,9 +89,9 @@
 
     if (newScaleToDomain !== scaleToDomain) {
       const delta = scaleToDomain - newScaleToDomain;
-      windows = [newStart + delta, newEnd + delta];
+      scale = reScale(scale, [newStart + delta, newEnd + delta]);
     } else {
-      windows = newWindows;
+      scale = reScale(scale, newWindows);
     }
   };
 
@@ -112,69 +106,63 @@
   };
 
   const addTrack = () => {
-    songs = [
-      ...songs,
-      {
-        range: scale.viewDomain,
-        name: "",
-        selected: true,
-      },
-    ];
+    songs = [...songs, makeEmptySong(scale.viewDomain, true)];
   };
 
   onMount(() => {
-    scale = makeScale(windows, [0, container.clientWidth]);
+    scale = makeScale(domain, [0, container.clientWidth]);
   });
 </script>
 
-<div class="overflow-hidden">
-  <div class="flex items-center gap-2">
-    <button class="btn" on:click={addTrack}>Add track</button>
-    <button class="btn" on:click={mergeTracks}>Merge</button>
-    <button class="btn" on:click={splitTracks}>Split</button>
-  </div>
-  <div class="flex">
-    <div>
-      <div class="h-10 w-96" />
-      {#each songs as song}
-        <div
-          class="h-[50px] px-2 py-1 -mt-[1px] border border-light-grey flex gap-2 items-center"
-        >
-          <button on:click={playSong(song)}>
-            <Icon src={Play} class="w-6 h-6" />
-          </button>
-          <div>
-            <input
-              class="bg-transparent"
-              bind:value={song.name}
-              placeholder="Unknown"
-            />
-            <div class="text-sm text-light-grey">
-              <TimeFormat value={song.range[0]} />
-              ~
-              <TimeFormat value={song.range[1]} />
-              (<TimeFormat value={song.range[1] - song.range[0]} />)
+<ContextMenu bind:songs bind:scale>
+  <div class="overflow-hidden">
+    <div class="flex items-center gap-2">
+      <button class="btn" on:click={addTrack}>Add track</button>
+      <button class="btn" on:click={mergeTracks}>Merge</button>
+      <button class="btn" on:click={splitTracks}>Split</button>
+    </div>
+    <div class="flex">
+      <div>
+        <div class="h-10 w-96" />
+        {#each songs as song}
+          <div
+            class="h-[50px] px-2 py-1 -mt-[1px] border border-light-grey flex gap-2 items-center"
+          >
+            <button on:click={playSong(song)}>
+              <Icon src={Play} class="w-6 h-6" />
+            </button>
+            <div>
+              <input
+                class="bg-transparent"
+                bind:value={song.name}
+                placeholder="Unknown"
+              />
+              <div class="text-sm text-light-grey">
+                <TimeFormat value={song.range[0]} />
+                ~
+                <TimeFormat value={song.range[1]} />
+                (<TimeFormat value={song.range[1] - song.range[0]} />)
+              </div>
             </div>
           </div>
-        </div>
-      {/each}
-    </div>
-    <div class="relative flex-1 overflow-hidden" bind:this={container}>
-      {#if scale}
-        <Indicator {scale} value={currentTime} {onCurrentTimeChange} />
-        <XAxis {scale} {onCurrentTimeChange} onWheel={scaleOrMoveTimeline} />
-        <div on:wheel={scaleOrMoveTimeline}>
-          {#each songs as song}
-            <Track
-              bind:domain={song.range}
-              {scale}
-              name={song.name}
-              bind:selected={song.selected}
-            />
-          {/each}
-        </div>
-        <Slider bind:value={windows} min={domain[0]} max={domain[1]} />
-      {/if}
+        {/each}
+      </div>
+      <div class="relative flex-1 overflow-hidden" bind:this={container}>
+        {#if scale}
+          <Indicator {scale} value={currentTime} {onCurrentTimeChange} />
+          <XAxis {scale} {onCurrentTimeChange} onWheel={scaleOrMoveTimeline} />
+          <div on:wheel={scaleOrMoveTimeline}>
+            {#each songs as song}
+              <Track bind:song bind:scale />
+            {/each}
+          </div>
+          <Slider
+            bind:value={scale.viewDomain}
+            min={domain[0]}
+            max={domain[1]}
+          />
+        {/if}
+      </div>
     </div>
   </div>
-</div>
+</ContextMenu>
