@@ -42,6 +42,23 @@
       });
   };
 
+  const saveSongs = async () => {
+    fetch("http://localhost:3000/songs", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        stream_url: await player.getVideoUrl(),
+        songs: songs.map((song) => ({
+          name: song.name,
+          start_at: song.range[0],
+          end_at: song.range[1],
+        })),
+      }),
+    });
+  };
+
   onMount(() => {
     if (!id) {
       window.location.href = "/";
@@ -74,6 +91,7 @@
   <button class="btn" on:click={handlePredict}
     >{loading ? "Loading..." : "Predict"}</button
   >
+  <button class="btn" on:click={saveSongs}>Save</button>
   {#if duration}
     <Timeline
       domain={[0, duration]}
