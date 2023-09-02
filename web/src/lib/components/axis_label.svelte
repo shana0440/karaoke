@@ -3,8 +3,8 @@
     mapViewDomainToRange,
     toTranslate,
     type Scale,
-  } from "../../scale/scale";
-  import { formatTime } from "../../time/time";
+  } from "$lib/scale/scale";
+  import { formatTime } from "$lib/time/time";
   import TimeFormat from "./time_format.svelte";
 
   export let value: number;

@@ -6,8 +6,8 @@
 
 <script lang="ts">
   import { onMount, setContext } from "svelte";
-  import { makeEmptySong, type Song } from "../../domains/song";
-  import { reScale, type Scale } from "../../scale/scale";
+  import { makeEmptySong, type Song } from "$lib/domains/song";
+  import { reScale, type Scale } from "$lib/scale/scale";
 
   export let scale: Scale;
   export let songs: Song[];

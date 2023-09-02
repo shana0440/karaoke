@@ -4,7 +4,7 @@
     toTranslate,
     type Scale,
     mapRangeToViewDomain,
-  } from "../../scale/scale";
+  } from "$lib/scale/scale";
   import { useDrag } from "$lib/hooks/use_drag";
 
   export let scale: Scale;

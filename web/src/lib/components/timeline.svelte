@@ -1,18 +1,18 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { Icon, Play } from "svelte-hero-icons";
   import {
     makeScale,
     type Scale,
     reScale,
     mapRangeToViewDomain,
-  } from "../../scale/scale";
+  } from "$lib/scale/scale";
   import Slider from "./slider.svelte";
   import Track from "./track.svelte";
   import XAxis from "./x_axis.svelte";
   import TimeFormat from "./time_format.svelte";
   import Indicator from "./indicator.svelte";
-  import { makeEmptySong, type Song } from "../../domains/song";
-  import { Icon, Play } from "svelte-hero-icons";
+  import { makeEmptySong, type Song } from "$lib/domains/song";
   import ContextMenu from "./context_menu.svelte";
 
   export let domain: [number, number];

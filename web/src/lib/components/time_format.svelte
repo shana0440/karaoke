@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { formatTime } from "../../time/time";
+  import { formatTime } from "$lib/time/time";
 
   export let value: number;
 </script>

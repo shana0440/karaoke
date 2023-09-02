@@ -4,7 +4,7 @@
     type Scale,
     calculateGap,
     mapRangeToViewDomain,
-  } from "../../scale/scale";
+  } from "$lib/scale/scale";
   import AxisLabel from "./axis_label.svelte";
 
   export let scale: Scale;

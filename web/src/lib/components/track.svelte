@@ -6,11 +6,11 @@
     calculateViewDomainDelta,
     constrainDomain,
     toWidth,
-  } from "../../scale/scale";
+  } from "$lib/scale/scale";
   import { type Option, none, some, isSome } from "fp-ts/Option";
   import { useDrag } from "$lib/hooks/use_drag";
   import { useContextMenu } from "$lib/hooks/use_contextmenu";
-  import type { Song } from "../../domains/song";
+  import type { Song } from "$lib/domains/song";
 
   export let scale: Scale;
   export let song: Song;
