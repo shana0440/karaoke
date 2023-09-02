@@ -4,7 +4,6 @@
     makeScale,
     type Scale,
     reScale,
-    constrainDomain,
     mapRangeToViewDomain,
   } from "../../scale/scale";
   import Slider from "./slider.svelte";
@@ -70,16 +69,16 @@
   };
 
   const moveSlider = (deltaX: number) => {
-    const newStart = constrainDomain(scale, scale.viewDomain[0] + deltaX);
-    const newEnd = constrainDomain(scale, scale.viewDomain[1] + deltaX);
+    const newStart = scale.viewDomain[0] + deltaX;
+    const newEnd = scale.viewDomain[1] + deltaX;
     const newWindows = [newStart, newEnd] as [number, number];
     scale = reScale(scale, newWindows);
   };
 
   const scaleTimeline = (deltaY: number, scaleTo: number) => {
     const [scaleToDomain, _] = mapRangeToViewDomain(scale, [scaleTo, scaleTo]);
-    const newStart = constrainDomain(scale, scale.viewDomain[0] - deltaY);
-    const newEnd = constrainDomain(scale, scale.viewDomain[1] + deltaY);
+    const newStart = scale.viewDomain[0] - deltaY;
+    const newEnd = scale.viewDomain[1] + deltaY;
     const newWindows = [newStart, newEnd] as [number, number];
     const newScale = reScale(scale, newWindows);
     const [newScaleToDomain, __] = mapRangeToViewDomain(newScale, [

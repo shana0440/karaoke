@@ -14,9 +14,10 @@ export function makeScale(domain: [number, number], range: [number, number]): Sc
 }
 
 export function reScale(scale: Scale, domain: [number, number]): Scale {
+    const viewDomain: [number, number] = [constrainDomain(scale, domain[0]), constrainDomain(scale, domain[1])]
     return {
         ...scale,
-        viewDomain: domain,
+        viewDomain,
     }
 }
 
