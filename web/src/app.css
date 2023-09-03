@@ -3,27 +3,27 @@
 @tailwind utilities;
 
 html {
-    @apply text-white bg-jet;
+  @apply text-white bg-jet;
 }
 
 @layer components {
-    .input {
-        @apply bg-gunmetal text-light-grey border border-cod-gray rounded flex gap-2 focus-within:outline outline-sky-blue items-center min-h-[40px] px-2;
-    }
+  .input {
+    @apply bg-gunmetal text-light-grey border border-cod-gray rounded flex gap-2 focus-within:outline outline-sky-blue items-center min-h-[40px] px-2;
+  }
 
-    .input input {
-        @apply w-full text-lg bg-transparent outline-none;
-    }
+  .input input {
+    @apply w-full text-lg bg-transparent outline-none;
+  }
 
-    .btn {
-        @apply px-2 py-1 transition rounded bg-purple-taupe hover:scale-105;
-    }
+  .btn {
+    @apply px-2 py-1 transition rounded bg-purple-taupe hover:scale-105;
+  }
 
-    .nav-link {
-        @apply flex gap-4 px-2 py-1 transition-colors rounded-md text-light-grey hover:text-white hover:bg-charcoal;
-    }
+  .nav-link {
+    @apply flex gap-4 px-4 py-2 transition-colors rounded-md text-light-grey hover:text-alice-blue hover:bg-charcoal;
+  }
 
-    .nav-link.active {
-        @apply text-white bg-sonic-silver;
-    }
+  .nav-link.active {
+    @apply text-alice-blue bg-sonic-silver;
+  }
 }
