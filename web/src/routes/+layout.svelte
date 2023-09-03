@@ -8,6 +8,9 @@
 
   import "../app.css";
   import Player from "$lib/components/player.svelte";
+  import FullscreenPlayer from "$lib/components/fullscreen_player.svelte";
+
+  let isFullScreenPlayerOpen: boolean = false;
 </script>
 
 <div class="flex flex-col h-screen gap-2 p-2">
@@ -49,5 +52,6 @@
       <slot />
     </div>
   </div>
-  <Player />
+  <Player bind:isFullScreenPlayerOpen />
+  <FullscreenPlayer bind:isFullScreenPlayerOpen />
 </div>

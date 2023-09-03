@@ -9,6 +9,8 @@
   } from "@tabler/icons-svelte";
   import { Slider } from "radix-svelte";
 
+  export let isFullScreenPlayerOpen: boolean;
+
   let rootValue: number[];
   let rootMin: number;
   let rootMax: number = 100;
@@ -74,7 +76,10 @@
     >
       <IconShare class="icon-btn-stroke" />
     </a>
-    <button class="group">
+    <button
+      class="group"
+      on:click={() => (isFullScreenPlayerOpen = !isFullScreenPlayerOpen)}
+    >
       <IconPhotoSensor class="icon-btn-stroke" />
     </button>
   </div>
