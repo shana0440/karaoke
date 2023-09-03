@@ -5,7 +5,7 @@ KARAOKE_DATASET_PATH = "dataset/karaoke"
 SONG_DATASET_PATH = "dataset/songs"
 ZATSUDAN_DATASET_PATH = "dataset/zatsudan"
 JSON_PATH = "dataset/karaoke.json"
-MODEL_PATH = "models/karaoke_model"
+MODEL_PATH = "dataset/models/karaoke_model"
 
 SAMPLE_RATE = 22050
 DURATION = 5
