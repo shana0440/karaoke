@@ -6,11 +6,11 @@
     IconPlayerPlay,
     IconShare,
     IconX,
-    IconDots,
   } from "@tabler/icons-svelte";
   import { Slider } from "radix-svelte";
   import { getContext } from "svelte";
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
+  import QueueItem from "./queue_item.svelte";
 
   export let isFullScreenPlayerOpen: boolean;
 
@@ -83,26 +83,7 @@
           <ul class="flex flex-col gap-2">
             {#each Array(10) as _, i}
               <li>
-                <div
-                  role="button"
-                  class="flex items-center gap-4 px-4 py-2 transition-colors rounded-lg group hover:bg-cod-gray"
-                >
-                  <p class="relative flex items-center justify-center">
-                    <span class="transition-opacity group-hover:opacity-0">
-                      {i + 1}
-                    </span>
-                    <IconPlayerPlay
-                      class="absolute w-5 h-5 transition-opacity opacity-0 group-hover:opacity-100 fill-alice-blue stroke-alice-blue"
-                    />
-                  </p>
-                  <p class="flex-1 w-0 truncate">いのちの名前</p>
-                  <time>04:50</time>
-                  <button
-                    class="p-1 transition-colors rounded-md hover:bg-charcoal"
-                  >
-                    <IconDots class="stroke-light-grey" />
-                  </button>
-                </div>
+                <QueueItem index={i + 1} />
               </li>
             {/each}
           </ul>
