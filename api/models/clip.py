@@ -9,5 +9,5 @@ class Clip(Base, TimestampColumns):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     video_id = Column(Integer, nullable=False)
-    start_at = Column(DateTime, nullable=True)
-    end_at = Column(DateTime, nullable=True)
+    start_at = Column(Integer, nullable=False)
+    end_at = Column(Integer, nullable=False)
