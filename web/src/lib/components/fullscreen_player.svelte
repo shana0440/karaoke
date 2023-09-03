@@ -11,6 +11,7 @@
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
   import QueueItem from "./queue_item.svelte";
   import { createSlider, melt } from "@melt-ui/svelte";
+  import { useQueue } from "$lib/hooks/use_queue";
 
   export let isFullScreenPlayerOpen: boolean;
 
@@ -25,6 +26,7 @@
       return next;
     },
   });
+  const { queue } = useQueue();
 
   const { move } = getContext<FloatingYoutubeContext>("floating-yt");
   let ytContainer: HTMLDivElement;
@@ -87,10 +89,12 @@
         <h2 class="text-2xl font-semibold">Queue</h2>
         <div class="relative flex-1 overflow-auto">
           <ul class="flex flex-col gap-2">
-            {#each Array(10) as _, i}
+            {#each $queue as clip, i}
               <li>
-                <QueueItem index={i + 1} />
+                <QueueItem index={i + 1} {clip} />
               </li>
+            {:else}
+              <li>Queue is Empty</li>
             {/each}
           </ul>
           <div
