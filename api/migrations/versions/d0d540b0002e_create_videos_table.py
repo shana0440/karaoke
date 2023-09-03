@@ -1,4 +1,4 @@
-"""create_streams_table
+"""create_videos_table
 
 Revision ID: d0d540b0002e
 Revises: 9ca9228053b7
@@ -20,15 +20,16 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.create_table(
-        'streams',
+        'videos',
         sa.Column('id', sa.Integer(), primary_key=True),
-        sa.Column('video_id', sa.String(), nullable=False, unique=True),
+        sa.Column('resource_id', sa.String(), nullable=False, unique=True),
         sa.Column('title', sa.String(), nullable=False),
-        sa.Column('streamer_id', sa.Integer(), nullable=False),
+        sa.Column('channel_id', sa.Integer(), nullable=False),
+        sa.Column('video_thumbnail', sa.String(), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('updated_at', sa.DateTime(), nullable=True),
     )
 
 
 def downgrade() -> None:
-    op.drop_table('streams')
+    op.drop_table('videos')

@@ -23,7 +23,7 @@ def upgrade() -> None:
         'clips',
         sa.Column('id', sa.Integer(), primary_key=True),
         sa.Column('name', sa.String(), nullable=False),
-        sa.Column('stream_id', sa.Integer(), nullable=False),
+        sa.Column('video_id', sa.Integer(), nullable=False),
         sa.Column('start_at', sa.DateTime(), nullable=True),
         sa.Column('end_at', sa.DateTime(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
