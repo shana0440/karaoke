@@ -9,6 +9,8 @@
     IconDots,
   } from "@tabler/icons-svelte";
   import { Slider } from "radix-svelte";
+  import { getContext } from "svelte";
+  import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
 
   export let isFullScreenPlayerOpen: boolean;
 
@@ -17,29 +19,48 @@
   let rootMax: number = 100;
 
   rootValue = [20];
+
+  const { move } = getContext<FloatingYoutubeContext>("floating-yt");
+  let ytContainer: HTMLDivElement;
+
+  $: {
+    if (isFullScreenPlayerOpen && ytContainer) {
+      // TODO: add animation to moving
+      setTimeout(() => {
+        move(ytContainer.getBoundingClientRect());
+      }, 300);
+    }
+  }
 </script>
 
 <div
-  class={`fixed inset-0 flex flex-col backdrop-blur-2xl transition-all opacity-0 translate-y-1/3 z-10 p-2 ${
-    isFullScreenPlayerOpen ? "translate-y-0 opacity-100" : "pointer-events-none"
+  class={`fixed inset-0 flex flex-col backdrop-blur-2xl transition-all z-10 p-2 ${
+    isFullScreenPlayerOpen
+      ? "translate-y-0 opacity-100"
+      : "pointer-events-none translate-y-1/3 opacity-0"
   }`}
 >
   <div class="flex items-center justify-center flex-1">
     <div class="flex justify-center gap-10 h-[600px]">
       <div
-        class="flex flex-col gap-10 px-6 py-10 rounded-3xl bg-dark-slate-grey/30 w-[450px]"
+        class="flex flex-col gap-10 px-6 py-10 rounded-3xl bg-cod-gray/30 w-[450px]"
       >
-        <img
-          class="shadow-2xl rounded-3xl w-96 aspect-auto"
-          src="https://i.ytimg.com/vi/u6ftrRfR5Nw/default.jpg"
-          alt="【#歌枠 / karaoke 】ジブリ 縛り 歌枠　#初見大歓迎 【 #Vtuber 】"
-        />
+        <div
+          class="relative overflow-hidden rounded-2xl aspect-video"
+          bind:this={ytContainer}
+        >
+          <img
+            class="absolute z-0 w-full h-full"
+            src="https://i.ytimg.com/vi/u6ftrRfR5Nw/default.jpg"
+            alt="【#歌枠 / karaoke 】ジブリ 縛り 歌枠　#初見大歓迎 【 #Vtuber 】"
+          />
+        </div>
         <div class="flex flex-col gap-2">
           <p class="font-semibold text-alice-blue">風になる</p>
-          <p class="text-sm text-light-Vgrey line-clamp-1">
+          <p class="text-sm text-light-grey line-clamp-1">
             茶柱ノキ / Chabashira Noki
           </p>
-          <p class="text-sm text-light-Vgrey line-clamp-1">
+          <p class="text-sm text-light-grey line-clamp-1">
             【#歌枠 / karaoke 】ジブリ 縛り 歌枠　#初見大歓迎 【 #Vtuber 】
           </p>
         </div>

@@ -1,57 +1,22 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import {
-    IconHome,
-    IconSearch,
-    IconLayoutGridAdd,
-  } from "@tabler/icons-svelte";
-
   import "../app.css";
   import Player from "$lib/components/player.svelte";
   import FullscreenPlayer from "$lib/components/fullscreen_player.svelte";
+  import FloatingYoutube from "$lib/components/floating_youtube.svelte";
+  import Sidebar from "$lib/components/sidebar.svelte";
 
   let isFullScreenPlayerOpen: boolean = false;
 </script>
 
-<div class="flex flex-col h-screen gap-2 p-2">
-  <div class="flex flex-1 gap-2">
-    <div class="min-h-full w-72">
-      <ul
-        class="flex flex-col min-h-full gap-2 p-2 rounded-lg bg-dark-slate-grey"
-      >
-        <li>
-          <a
-            class="nav-link"
-            class:active={$page.url.pathname === "/"}
-            href="/"
-          >
-            <IconHome />Home
-          </a>
-        </li>
-        <li>
-          <a
-            class="nav-link"
-            class:active={$page.url.pathname === "/search"}
-            href="/search"
-          >
-            <IconSearch />Search
-          </a>
-        </li>
-        <li>
-          <a
-            class="nav-link"
-            class:active={$page.url.pathname.startsWith("/editor")}
-            href="/editor"
-          >
-            <IconLayoutGridAdd />Clip
-          </a>
-        </li>
-      </ul>
+<FloatingYoutube>
+  <div class="flex flex-col h-screen gap-2 p-2">
+    <div class="flex flex-1 gap-2">
+      <Sidebar bind:isFullScreenPlayerOpen />
+      <div class="flex-1">
+        <slot />
+      </div>
     </div>
-    <div class="flex-1">
-      <slot />
-    </div>
+    <Player bind:isFullScreenPlayerOpen />
+    <FullscreenPlayer bind:isFullScreenPlayerOpen />
   </div>
-  <Player bind:isFullScreenPlayerOpen />
-  <FullscreenPlayer bind:isFullScreenPlayerOpen />
-</div>
+</FloatingYoutube>

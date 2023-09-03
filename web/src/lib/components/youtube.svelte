@@ -11,4 +11,4 @@
   });
 </script>
 
-<div id="player" />
+<div class="yt-player" id="player" />

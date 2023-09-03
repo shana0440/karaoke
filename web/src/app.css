@@ -34,4 +34,8 @@ html {
   .nav-link.active {
     @apply text-alice-blue bg-sonic-silver;
   }
+
+  .yt-player {
+    @apply z-10 w-full h-full;
+  }
 }
