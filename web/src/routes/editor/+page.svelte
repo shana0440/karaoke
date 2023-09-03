@@ -5,7 +5,7 @@
   let error: string;
 </script>
 
-<div class="flex items-center justify-center w-screen h-screen">
+<div class="flex items-center justify-center py-40">
   <div class="flex flex-col w-full max-w-4xl gap-5">
     <h1 class="text-5xl text-center">Welcome to Karaoke</h1>
     <p class="text-2xl text-center">

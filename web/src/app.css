@@ -18,4 +18,12 @@ html {
     .btn {
         @apply px-2 py-1 transition rounded bg-purple-taupe hover:scale-105;
     }
+
+    .nav-link {
+        @apply flex gap-4 px-2 py-1 transition-colors rounded-md text-light-grey hover:text-white hover:bg-charcoal;
+    }
+
+    .nav-link.active {
+        @apply text-white bg-sonic-silver;
+    }
 }
