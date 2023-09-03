@@ -22,7 +22,7 @@
   const handlePredict = async () => {
     const url = await player.getVideoUrl();
     loading = true;
-    fetch("http://localhost:3000/predict/", {
+    fetch("http://localhost:8888/predict/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,14 +43,14 @@
   };
 
   const saveSongs = async () => {
-    fetch("http://localhost:3000/songs", {
+    fetch("http://localhost:8888/clips", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         stream_url: await player.getVideoUrl(),
-        songs: songs.map((song) => ({
+        clips: songs.map((song) => ({
           name: song.name,
           start_at: song.range[0],
           end_at: song.range[1],
