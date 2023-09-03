@@ -7,18 +7,24 @@
     IconShare,
     IconX,
   } from "@tabler/icons-svelte";
-  import { Slider } from "radix-svelte";
   import { getContext } from "svelte";
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
   import QueueItem from "./queue_item.svelte";
+  import { createSlider, melt } from "@melt-ui/svelte";
 
   export let isFullScreenPlayerOpen: boolean;
 
-  let rootValue: number[];
-  let rootMin: number;
-  let rootMax: number = 100;
-
-  rootValue = [20];
+  const {
+    elements: { root, range, thumb },
+    states: { value },
+  } = createSlider({
+    defaultValue: [100],
+    max: 500,
+    step: 1,
+    onValueChange({ curr, next }) {
+      return next;
+    },
+  });
 
   const { move } = getContext<FloatingYoutubeContext>("floating-yt");
   let ytContainer: HTMLDivElement;
@@ -112,25 +118,15 @@
     </div>
     <div class="flex items-center flex-1 gap-2">
       <time class="text-light-grey">01:30</time>
-      <Slider.Root
-        class="relative flex h-5
-          w-full touch-none select-none items-center 
-          data-[orientation=vertical]:h-[200px] 
-          data-[orientation=vertical]:w-5 
-          data-[orientation=vertical]:flex-col
-          "
-        bind:value={rootValue}
-        min={rootMin}
-        max={rootMax}
-        aria-label="Volume"
-      >
-        <Slider.Track class="relative h-1 rounded-full grow bg-charcoal">
-          <Slider.Range class="absolute h-full rounded-full bg-alice-blue" />
-        </Slider.Track>
-        <Slider.Thumb
-          class="block h-5 w-5 rounded-full bg-alice-blue cursor-pointer focus:shadow-[0_0_0_5px] focus:shadow-cod-gray/50 focus:outline-none"
+      <span use:melt={$root} class="relative flex items-center flex-1">
+        <span class="block w-full h-1 bg-gunmetal">
+          <span use:melt={$range} class="h-1 bg-alice-blue" />
+        </span>
+        <span
+          use:melt={$thumb()}
+          class="block w-5 h-5 rounded-full outline-none bg-alice-blue focus:ring-4 focus:ring-cod-gray/40"
         />
-      </Slider.Root>
+      </span>
       <time class="text-light-grey">04:30</time>
     </div>
     <div class="flex items-center justify-end gap-4">
