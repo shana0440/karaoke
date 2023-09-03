@@ -19,6 +19,14 @@ html {
     @apply px-2 py-1 transition rounded bg-purple-taupe hover:scale-105;
   }
 
+  .icon-btn-stroke {
+    @apply transition-colors stroke-light-grey group-hover:stroke-alice-blue;
+  }
+
+  .icon-btn-fill {
+    @apply transition-colors fill-light-grey group-hover:fill-alice-blue;
+  }
+
   .nav-link {
     @apply flex gap-4 px-4 py-2 transition-colors rounded-md text-light-grey hover:text-alice-blue hover:bg-charcoal;
   }

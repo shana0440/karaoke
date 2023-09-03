@@ -8,7 +8,7 @@
 >
   <div class="relative overflow-hidden">
     <img
-      class="w-full aspect-auto"
+      class="w-full rounded-md aspect-auto"
       src="https://i.ytimg.com/vi/u6ftrRfR5Nw/default.jpg"
       alt="【#歌枠 / karaoke 】ジブリ 縛り 歌枠　#初見大歓迎 【 #Vtuber 】"
     />
@@ -21,7 +21,5 @@
     </div>
   </div>
   <p class="font-semibold text-alice-blue">風になる</p>
-  <p class="text-sm text-light-grey line-clamp-2">
-    【#歌枠 / karaoke 】ジブリ 縛り 歌枠　#初見大歓迎 【 #Vtuber 】
-  </p>
+  <p class="text-sm text-light-grey line-clamp-2">茶柱ノキ / Chabashira Noki</p>
 </div>
