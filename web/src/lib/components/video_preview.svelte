@@ -11,6 +11,7 @@
   import { useApi } from "$lib/hooks/use_api";
   import { predict, saveClips } from "$lib/api/api";
   import { useVideoEditor } from "$lib/hooks/use_video_editor";
+  import Tooltip from "./tooltip.svelte";
 
   export let player: YouTubePlayer;
   export let duration: number;
@@ -68,28 +69,33 @@
 </div>
 <div class="grid grid-cols-3">
   <div class="flex gap-2">
-    <button class="btn" on:click={addTrack}>
-      <IconPlus />
-      Add track
-    </button>
-    <button class="btn" on:click={mergeTracks}>
-      <IconCirclesRelation />
-      Merge
-    </button>
-    <button class="btn" on:click={splitTracks}>
-      <IconSpacingHorizontal />
-      Split
-    </button>
+    <Tooltip description="Add new Track">
+      <button class="btn" on:click={addTrack}>
+        <IconPlus />
+      </button>
+    </Tooltip>
+    <Tooltip description="Merge Selected Tracks">
+      <button class="btn" on:click={mergeTracks}>
+        <IconCirclesRelation />
+      </button>
+    </Tooltip>
+    <Tooltip description="Split Selected Tracks">
+      <button class="btn" on:click={splitTracks}>
+        <IconSpacingHorizontal />
+      </button>
+    </Tooltip>
   </div>
   <div class="flex items-center justify-center">01:10</div>
   <div class="flex justify-end gap-2">
-    <button class="btn" on:click={handlePredict}>
-      <IconLoader3 />
-      Predict
-    </button>
-    <button class="btn" on:click={saveTracks}>
-      <IconCloudUp />
-      Save
-    </button>
+    <Tooltip description="Predict Tracks">
+      <button class="btn" on:click={handlePredict}>
+        <IconLoader3 />
+      </button>
+    </Tooltip>
+    <Tooltip description="Save Tracks">
+      <button class="btn" on:click={saveTracks}>
+        <IconCloudUp />
+      </button>
+    </Tooltip>
   </div>
 </div>
