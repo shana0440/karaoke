@@ -1,6 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Icon, Play } from "svelte-hero-icons";
+  import {
+    IconPlayerPlay,
+    IconCirclesRelation,
+    IconPlus,
+    IconSpacingHorizontal,
+  } from "@tabler/icons-svelte";
   import {
     makeScale,
     type Scale,
@@ -116,9 +121,18 @@
 <ContextMenu bind:songs bind:scale>
   <div class="overflow-hidden">
     <div class="flex items-center gap-2">
-      <button class="btn" on:click={addTrack}>Add track</button>
-      <button class="btn" on:click={mergeTracks}>Merge</button>
-      <button class="btn" on:click={splitTracks}>Split</button>
+      <button class="btn" on:click={addTrack}>
+        <IconPlus />
+        Add track
+      </button>
+      <button class="btn" on:click={mergeTracks}>
+        <IconCirclesRelation />
+        Merge
+      </button>
+      <button class="btn" on:click={splitTracks}>
+        <IconSpacingHorizontal />
+        Split
+      </button>
     </div>
     <div class="flex">
       <div>
@@ -128,7 +142,7 @@
             class="h-[50px] px-2 py-1 -mt-[1px] border border-light-grey flex gap-2 items-center"
           >
             <button on:click={playSong(song)}>
-              <Icon src={Play} class="w-6 h-6" />
+              <IconPlayerPlay class="w-6 h-6" />
             </button>
             <div>
               <input

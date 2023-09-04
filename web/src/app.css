@@ -16,7 +16,7 @@ html {
   }
 
   .btn {
-    @apply px-2 py-1 transition rounded bg-purple-taupe hover:scale-105;
+    @apply flex gap-2 px-2 py-1 transition rounded bg-purple-taupe hover:scale-105;
   }
 
   .icon-btn-stroke {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Icon, MagnifyingGlass } from "svelte-hero-icons";
+  import { IconSearch } from "@tabler/icons-svelte";
   import { handleKey } from "$lib/doc/doc";
 
   let error: string;
@@ -12,7 +12,7 @@
       Input a youtube url and start mark the singing section
     </p>
     <div class="input">
-      <Icon class="w-6 h-6" src={MagnifyingGlass} solid />
+      <IconSearch class="w-6 h-6" />
       <input
         on:keypress={handleKey(["Enter"], (e) => {
           try {

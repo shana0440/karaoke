@@ -5,6 +5,10 @@
   import type { YouTubePlayer } from "youtube-player/dist/types";
   import Timeline from "$lib/components/timeline.svelte";
   import type { Song } from "$lib/domains/song";
+  import MostLikeComment from "$lib/components/most_like_comment.svelte";
+  import { IconCloudUp, IconLoader3 } from "@tabler/icons-svelte";
+  import { useApi } from "$lib/hooks/use_api";
+  import { predict, saveClips } from "$lib/api/api";
 
   const id = $page.params.video_id ?? "";
   let player: YouTubePlayer;
@@ -19,22 +23,17 @@
     player.seekTo(time, true);
   };
 
+  const apiClient = useApi();
   const handlePredict = async () => {
     const url = await player.getVideoUrl();
     loading = true;
-    fetch("http://localhost:8888/predict/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url }),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        songs = res.timeslots
+    predict(apiClient, { url })
+      .then((resp) => {
+        songs = resp.timeslots
           .filter((timeslot: [number, number]) => timeslot[0] < duration)
           .map((timeslot: [number, number]) => ({
             range: timeslot,
+            selected: false,
           }));
       })
       .finally(() => {
@@ -43,55 +42,51 @@
   };
 
   const saveSongs = async () => {
-    fetch("http://localhost:8888/clips", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        stream_url: await player.getVideoUrl(),
-        clips: songs.map((song) => ({
-          name: song.name,
-          start_at: song.range[0],
-          end_at: song.range[1],
-        })),
-      }),
+    saveClips(apiClient, {
+      videoUrl: await player.getVideoUrl(),
+      clips: songs.map((song) => ({
+        name: song.name,
+        startAt: song.range[0],
+        endAt: song.range[1],
+      })),
     });
   };
 
   onMount(() => {
-    if (!id) {
-      window.location.href = "/";
-    }
     player.on("stateChange", async (e) => {
       player.getDuration().then((value) => {
         duration = value;
       });
     });
-    const subscribeCurrentTimeUpdated = (e: MessageEvent<string>) => {
-      try {
-        const data = JSON.parse(e.data);
-        // "{\"event\":\"infoDelivery\",\"info\":{\"currentTime\":3850.575187,\"videoBytesLoaded\":0.6524905538441726,\"videoLoadedFraction\":0.6524905538441726,\"currentTimeLastUpdated_\":1692837082.604,\"playbackRate\":1,\"mediaReferenceTime\":3850.575541},\"id\":6,\"channel\":\"widget\"}"
-        if (data.info.currentTime) {
-          currentTime = data.info.currentTime;
-        }
-      } catch (e) {
-        // ignore error, becuase not every message is come from youtube iframe
-      }
-    };
-    window.addEventListener("message", subscribeCurrentTimeUpdated);
-    return () => {
-      window.removeEventListener("message", subscribeCurrentTimeUpdated);
-    };
   });
 </script>
 
-<div class="flex flex-col w-screen overflow-hidden">
-  <Youtube {id} bind:player />
-  <button class="btn" on:click={handlePredict}
-    >{loading ? "Loading..." : "Predict"}</button
-  >
-  <button class="btn" on:click={saveSongs}>Save</button>
+<div class="flex flex-col overflow-hidden">
+  <div class="flex gap-2">
+    <div class="w-96">
+      <h2>Most Like Comment</h2>
+      <MostLikeComment videoId={id} />
+    </div>
+    <div class="flex flex-col flex-1 gap-2">
+      <div class="flex-1 aspect-video">
+        <Youtube {id} bind:player bind:currentTime />
+      </div>
+      <div class="grid grid-cols-3">
+        <div />
+        <div class="flex items-center justify-center">01:10</div>
+        <div class="flex justify-end gap-2">
+          <button class="btn" on:click={handlePredict}>
+            <IconLoader3 />
+            Predict
+          </button>
+          <button class="btn" on:click={saveSongs}>
+            <IconCloudUp />
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   {#if duration}
     <Timeline
       domain={[0, duration]}
