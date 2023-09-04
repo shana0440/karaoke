@@ -1,43 +1,30 @@
 <script lang="ts">
   import { createSlider, melt } from "@melt-ui/svelte";
   import { usePlayer } from "$lib/hooks/use_player";
-  import { match } from "fp-ts/lib/Option";
-  import { pipe } from "fp-ts/lib/function";
+  import { isSome } from "fp-ts/lib/Option";
 
   const { currentTime, playingClip, syncToProgressBar } = usePlayer();
   const {
     elements: { root, range, thumb },
+    options: { min, max },
   } = createSlider({
-    defaultValue: [
-      pipe(
-        $playingClip,
-        match(
-          () => 0,
-          (clip) => clip.start_at
-        )
-      ),
-    ],
+    defaultValue: [0],
     value: currentTime,
-    min: pipe(
-      $playingClip,
-      match(
-        () => 0,
-        (clip) => clip.start_at
-      )
-    ),
-    max: pipe(
-      $playingClip,
-      match(
-        () => 0,
-        (clip) => clip.end_at
-      )
-    ),
+    min: 0,
+    max: 0,
     step: 1,
     onValueChange({ curr, next }) {
       syncToProgressBar(next[0]);
       return next;
     },
   });
+
+  $: {
+    if (isSome($playingClip)) {
+      min.set($playingClip.value.start_at);
+      max.set($playingClip.value.end_at);
+    }
+  }
 </script>
 
 <span use:melt={$root} class="relative flex items-center flex-1 group">

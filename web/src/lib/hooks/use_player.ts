@@ -38,6 +38,7 @@ let onSyncToProgressBarListeners: OnSyncToProgressBarListener[] = [];
 export function usePlayer() {
   const play = (clip?: Clip) => {
     if (clip) {
+      syncToProgressBar(clip.start_at);
       currentTime.set([clip.start_at]);
       playingClip.set(some(clip));
       isPause.set(false);
