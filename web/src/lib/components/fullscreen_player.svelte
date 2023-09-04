@@ -19,7 +19,8 @@
 
   export let isFullScreenPlayerOpen: boolean;
 
-  const { playingClip, isPause, currentTime } = usePlayer();
+  const { playingClip, isPause, currentTime, play, pause, playNext, playPrev } =
+    usePlayer();
   const { queue } = useQueue();
 
   const { move } = getContext<FloatingYoutubeContext>("floating-yt");
@@ -71,17 +72,21 @@
           </div>
 
           <div class="flex items-center justify-center gap-2">
-            <button class="p-4 rounded-full group">
+            <button class="p-4 rounded-full group" on:click={playPrev}>
               <IconPlayerSkipBack class="icon-btn-fill icon-btn-stroke" />
             </button>
-            <button type="button" class="p-4 rounded-full bg-cod-gray group">
+            <button
+              type="button"
+              class="p-4 rounded-full bg-cod-gray group"
+              on:click={() => ($isPause ? play() : pause())}
+            >
               {#if $isPause}
                 <IconPlayerPlay class="icon-btn-fill icon-btn-stroke" />
               {:else}
                 <IconPlayerPause class="icon-btn-fill icon-btn-stroke" />
               {/if}
             </button>
-            <button class="p-4 rounded-full group">
+            <button class="p-4 rounded-full group" on:click={playNext}>
               <IconPlayerSkipForward class="icon-btn-fill icon-btn-stroke" />
             </button>
           </div>
@@ -108,14 +113,16 @@
     <div
       class="flex items-center w-full gap-10 px-4 py-2 rounded-lg bg-dark-slate-grey"
     >
-      <div class="flex w-64 gap-2">
+      <div class="flex gap-2 w-72">
         <img
           class="rounded h-14 aspect-auto"
           src={$playingClip.value.video.video_thumbnail}
           alt={$playingClip.value.video.title}
         />
         <div class="flex flex-col justify-around">
-          <p class="font-semibold text-alice-blue">{$playingClip.value.name}</p>
+          <p class="font-semibold text-alice-blue line-clamp-1">
+            {$playingClip.value.name}
+          </p>
           <p class="text-sm text-light-grey line-clamp-1">
             {$playingClip.value.video.channel.title}
           </p>

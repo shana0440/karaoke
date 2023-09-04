@@ -46,5 +46,5 @@
       </a>
     </li>
   </ul>
-  <div class="aspect-video" bind:this={ytContainer}>ads</div>
+  <div class="aspect-video" bind:this={ytContainer} />
 </div>
