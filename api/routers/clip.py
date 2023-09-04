@@ -2,11 +2,13 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import List
 from database.session import open_session
-
 from models import Video, Clip, Channel
 from services.youtube import get_channel_info, get_video_info, extract_video_id_from_url
+from schemas.clip import ClipSchema
+from query.pagination import paginate
 
 router = APIRouter()
+
 
 class ClipEntity(BaseModel):
     name: str
@@ -18,16 +20,19 @@ class CreateClipsRequest(BaseModel):
     stream_url: str
     clips: List[ClipEntity]
 
+
 @router.post("/clips", status_code=201)
 def create_clips(body: CreateClipsRequest):
     id = extract_video_id_from_url(body.stream_url)
     video_info = get_video_info(id)
     channel_info = get_channel_info(video_info.channelId)
     with open_session() as session:
-        channel = session.query(Channel).filter_by(resource_id=video_info.channelId).first()
+        channel = (
+            session.query(Channel).filter_by(resource_id=video_info.channelId).first()
+        )
         if channel is None:
             channel = Channel(
-                resource_id=video_info.channelId, 
+                resource_id=video_info.channelId,
                 title=channel_info.title,
                 thumbnail_url=channel_info.thumbnails.default.url,
                 custom_url=channel_info.customUrl,
@@ -36,17 +41,25 @@ def create_clips(body: CreateClipsRequest):
             session.flush()
 
         video = Video(
-            resource_id=id, 
-            title=video_info.title, 
+            resource_id=id,
+            title=video_info.title,
             channel_id=channel.id,
-            video_thumbnail=video_info.thumbnails.default.url
+            video_thumbnail=video_info.thumbnails.default.url,
         )
         session.add(video)
         session.flush()
-        
+
         for s in body.clips:
-            clip = Clip(name=s.name, start_at=s.start_at, end_at=s.end_at, video_id=video.id)
+            clip = Clip(
+                name=s.name, start_at=s.start_at, end_at=s.end_at, video_id=video.id
+            )
             session.add(clip)
 
     return
-    
+
+
+@router.get("/clips")
+def get_clips(limit: int = 20, offset: int = 0):
+    with open_session() as session:
+        query = session.query(Clip)
+        return paginate(query, limit, offset, ClipSchema)
