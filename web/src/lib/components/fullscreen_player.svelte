@@ -15,6 +15,7 @@
   import { isSome } from "fp-ts/lib/Option";
   import TimeFormat from "./time_format.svelte";
   import ProgressBar from "./progress_bar.svelte";
+  import autoAnimate from "@formkit/auto-animate";
 
   export let isFullScreenPlayerOpen: boolean;
 
@@ -85,10 +86,10 @@
             </button>
           </div>
         </div>
-        <div class="self-start w-[600px] flex flex-col gap-4">
+        <div class="self-start w-[600px] h-full flex flex-col gap-4">
           <h2 class="text-2xl font-semibold">Queue</h2>
           <div class="relative flex-1 overflow-auto">
-            <ul class="flex flex-col gap-2">
+            <ul class="flex flex-col gap-2" use:autoAnimate>
               {#each $queue as clip, i}
                 <li>
                   <QueueItem index={i + 1} {clip} />

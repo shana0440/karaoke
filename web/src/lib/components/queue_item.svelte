@@ -10,6 +10,7 @@
   import { useQueue } from "$lib/hooks/use_queue";
   import type { Clip } from "$lib/domains/clip";
   import TimeFormat from "./time_format.svelte";
+  import { usePlayer } from "$lib/hooks/use_player";
 
   export let index: number;
   export let clip: Clip;
@@ -20,10 +21,17 @@
     forceVisible: true,
   });
   const { remove } = useQueue();
+  const { play } = usePlayer();
 </script>
 
 <div
   role="button"
+  tabindex="-1"
+  on:click={() => {
+    play(clip);
+    remove(clip);
+  }}
+  on:keydown={() => {}}
   class="flex items-center gap-4 px-4 py-2 transition-colors rounded-lg group hover:bg-cod-gray"
 >
   <p class="relative flex items-center justify-center">
@@ -42,6 +50,7 @@
     <button
       class="p-1 transition-colors rounded-md hover:bg-charcoal"
       use:melt={$trigger}
+      on:click={(e) => e.stopPropagation()}
     >
       <IconDots class="stroke-light-grey" />
     </button>
@@ -54,7 +63,7 @@
       Remove from Queue
     </button>
     <a
-      href="https://youtube.com/watch?v=u6ftrRfR5Nw&t=300s"
+      href={`https://youtube.com/watch?v=${clip.video.resource_id}&t=${clip.start_at}s`}
       target="_blank"
       class="item"
       use:melt={$item}
@@ -64,13 +73,3 @@
     </a>
   </div>
 {/if}
-
-<style lang="postcss">
-  .menu {
-    @apply z-10 flex flex-col shadow-lg p-1;
-    @apply rounded-md bg-bastille border border-outer-space;
-  }
-  .item {
-    @apply flex items-center gap-2 px-4 py-2 rounded text-sm hover:bg-charcoal;
-  }
-</style>

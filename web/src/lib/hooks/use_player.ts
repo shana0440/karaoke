@@ -1,29 +1,9 @@
 import type { Clip } from "$lib/domains/clip";
 import { get, writable } from "svelte/store"
-import { some, type Option, isSome } from "fp-ts/Option"
+import { some, type Option, isSome, none } from "fp-ts/Option"
+import { useQueue } from "./use_queue";
 
-const playingClip = writable<Option<Clip>>(some({
-  id: 1,
-  name: "風になる",
-  start_at: 300,
-  end_at: 505,
-  created_at: "",
-  updated_at: "",
-  video: {
-    id: 1,
-    channel_id: 1,
-    resource_id: "u6ftrRfR5Nw",
-    title: "【#歌枠 / karaoke 】ジブリ 縛り 歌枠　#初見大歓迎 【 #Vtuber 】",
-    video_thumbnail: "https://i.ytimg.com/vi/u6ftrRfR5Nw/default.jpg",
-    channel: {
-      id: 1,
-      title: "茶柱ノキ / Chabashira Noki",
-      resource_id: "UCZtjgZesCXH5RQHKrp-dCOQ",
-      thumbnail_url: " https://yt3.ggpht.com/w7yrGSrUb9TaNcHWgfelFi1y6paMwU6X9ae9o22j9y_q0oEAhuqfM9DbZf4LXhhUtBs95DxRBA=s88-c-k-c0x00ffffff-no-rj",
-      custom_url: "@chabashiranoki",
-    }
-  }
-}));
+const playingClip = writable<Option<Clip>>(none);
 const isPause = writable<boolean>(false);
 const currentTime = writable<number[]>([0]);
 
@@ -36,6 +16,8 @@ let onPauseListeners: OnPauseListener[] = [];
 let onSyncToProgressBarListeners: OnSyncToProgressBarListener[] = [];
 
 export function usePlayer() {
+  const { queue, remove } = useQueue();
+
   const play = (clip?: Clip) => {
     if (clip) {
       syncToProgressBar(clip.start_at);
@@ -53,11 +35,16 @@ export function usePlayer() {
     onPauseListeners.forEach(it => it())
   }
 
-  const updateTime = (time: number) => {
+  const tick = (time: number) => {
     currentTime.set([time]);
     const clip = get(playingClip);
     if (isSome(clip) && clip.value.end_at < time) {
       pause();
+      if (get(queue).length > 0) {
+        const nextClip = get(queue)[0];
+        play(nextClip);
+        remove(nextClip);
+      }
     }
   }
 
@@ -92,7 +79,7 @@ export function usePlayer() {
     isPause,
     play,
     pause,
-    updateTime,
+    tick,
     syncToProgressBar,
     onPlay,
     onPause,

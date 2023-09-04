@@ -9,6 +9,12 @@
     player = YoutubePlayer("player");
     player.loadVideoById(id);
   });
+
+  $: {
+    if (id && player) {
+      player.loadVideoById(id);
+    }
+  }
 </script>
 
 <div class="yt-player" id="player" />

@@ -14,9 +14,9 @@
   import Youtube from "./youtube.svelte";
   import type { YouTubePlayer } from "youtube-player/dist/types";
   import { usePlayer } from "$lib/hooks/use_player";
-  import { isSome } from "fp-ts/lib/Option";
+  import { isNone, isSome } from "fp-ts/lib/Option";
 
-  const { playingClip, updateTime, onPlay, onPause, onSyncToProgressBar } =
+  const { playingClip, tick, onPlay, onPause, onSyncToProgressBar } =
     usePlayer();
   let ytPlayer: YouTubePlayer;
   let ytBox: HTMLDivElement;
@@ -47,7 +47,7 @@
         const data = JSON.parse(e.data);
         // "{\"event\":\"infoDelivery\",\"info\":{\"currentTime\":3850.575187,\"videoBytesLoaded\":0.6524905538441726,\"videoLoadedFraction\":0.6524905538441726,\"currentTimeLastUpdated_\":1692837082.604,\"playbackRate\":1,\"mediaReferenceTime\":3850.575541},\"id\":6,\"channel\":\"widget\"}"
         if (data.info.currentTime) {
-          updateTime(data.info.currentTime);
+          tick(data.info.currentTime);
         }
       } catch (e) {
         // ignore error, becuase not every message is come from youtube iframe
@@ -64,8 +64,13 @@
 </script>
 
 <slot />
-{#if isSome($playingClip)}
-  <div class="absolute z-20 overflow-hidden rounded-lg" bind:this={ytBox}>
-    <Youtube id={$playingClip.value.video.resource_id} bind:player={ytPlayer} />
-  </div>
-{/if}
+<div
+  class="absolute z-20 overflow-hidden rounded-lg"
+  bind:this={ytBox}
+  class:invisible={isNone($playingClip)}
+>
+  <Youtube
+    id={isSome($playingClip) ? $playingClip.value.video.resource_id : ""}
+    bind:player={ytPlayer}
+  />
+</div>
