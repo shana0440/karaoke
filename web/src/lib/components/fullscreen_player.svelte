@@ -10,26 +10,15 @@
   import { getContext } from "svelte";
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
   import QueueItem from "./queue_item.svelte";
-  import { createSlider, melt } from "@melt-ui/svelte";
   import { useQueue } from "$lib/hooks/use_queue";
   import { usePlayer } from "$lib/hooks/use_player";
   import { isSome } from "fp-ts/lib/Option";
   import TimeFormat from "./time_format.svelte";
+  import ProgressBar from "./progress_bar.svelte";
 
   export let isFullScreenPlayerOpen: boolean;
 
-  const {
-    elements: { root, range, thumb },
-    states: { value },
-  } = createSlider({
-    defaultValue: [100],
-    max: 500,
-    step: 1,
-    onValueChange({ curr, next }) {
-      return next;
-    },
-  });
-  const { player } = usePlayer();
+  const { playingClip, isPause, currentTime } = usePlayer();
   const { queue } = useQueue();
 
   const { move } = getContext<FloatingYoutubeContext>("floating-yt");
@@ -45,7 +34,7 @@
   }
 </script>
 
-{#if isSome($player)}
+{#if isSome($playingClip)}
   <div
     class={`fixed inset-0 flex flex-col backdrop-blur-2xl transition-all z-10 p-2 ${
       isFullScreenPlayerOpen
@@ -64,19 +53,19 @@
           >
             <img
               class="absolute z-0 w-full h-full"
-              src={$player.value.clip.video.video_thumbnail}
-              alt={$player.value.clip.video.title}
+              src={$playingClip.value.video.video_thumbnail}
+              alt={$playingClip.value.video.title}
             />
           </div>
           <div class="flex flex-col gap-2">
             <p class="font-semibold text-alice-blue">
-              {$player.value.clip.name}
+              {$playingClip.value.name}
             </p>
             <p class="text-sm text-light-grey line-clamp-1">
-              {$player.value.clip.video.channel.title}
+              {$playingClip.value.video.channel.title}
             </p>
             <p class="text-sm text-light-grey line-clamp-1">
-              {$player.value.clip.video.title}
+              {$playingClip.value.video.title}
             </p>
           </div>
 
@@ -85,7 +74,7 @@
               <IconPlayerSkipBack class="icon-btn-fill icon-btn-stroke" />
             </button>
             <button type="button" class="p-4 rounded-full bg-cod-gray group">
-              {#if $player.value.isPause}
+              {#if $isPause}
                 <IconPlayerPlay class="icon-btn-fill icon-btn-stroke" />
               {:else}
                 <IconPlayerPause class="icon-btn-fill icon-btn-stroke" />
@@ -121,38 +110,30 @@
       <div class="flex w-64 gap-2">
         <img
           class="rounded h-14 aspect-auto"
-          src={$player.value.clip.video.video_thumbnail}
-          alt={$player.value.clip.video.title}
+          src={$playingClip.value.video.video_thumbnail}
+          alt={$playingClip.value.video.title}
         />
         <div class="flex flex-col justify-around">
-          <p class="font-semibold text-alice-blue">{$player.value.clip.name}</p>
+          <p class="font-semibold text-alice-blue">{$playingClip.value.name}</p>
           <p class="text-sm text-light-grey line-clamp-1">
-            {$player.value.clip.video.channel.title}
+            {$playingClip.value.video.channel.title}
           </p>
         </div>
       </div>
-      <div class="flex items-center flex-1 gap-2">
+      <div class="flex items-center flex-1 gap-5">
         <time class="text-light-grey">
-          <TimeFormat value={$player.value.currentTime} />
+          <TimeFormat value={$currentTime[0] - $playingClip.value.start_at} />
         </time>
-        <span use:melt={$root} class="relative flex items-center flex-1">
-          <span class="block w-full h-1 bg-gunmetal">
-            <span use:melt={$range} class="h-1 bg-alice-blue" />
-          </span>
-          <span
-            use:melt={$thumb()}
-            class="block w-5 h-5 rounded-full outline-none bg-alice-blue focus:ring-4 focus:ring-cod-gray/40"
-          />
-        </span>
+        <ProgressBar />
         <time class="text-light-grey">
           <TimeFormat
-            value={$player.value.clip.end_at - $player.value.clip.start_at}
+            value={$playingClip.value.end_at - $playingClip.value.start_at}
           />
         </time>
       </div>
       <div class="flex items-center justify-end gap-4">
         <a
-          href={`https://youtube.com/watch?v=${$player.value.clip.video.id}&t=${$player.value.clip.start_at}s"`}
+          href={`https://youtube.com/watch?v=${$playingClip.value.video.id}&t=${$playingClip.value.start_at}s"`}
           target="_blank"
           class="group"
         >
