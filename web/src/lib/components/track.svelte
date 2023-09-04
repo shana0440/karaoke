@@ -9,18 +9,23 @@
   } from "$lib/scale/scale";
   import { type Option, none, some, isSome } from "fp-ts/Option";
   import { useDrag } from "$lib/hooks/use_drag";
-  import { useContextMenu } from "$lib/hooks/use_contextmenu";
-  import type { Song } from "$lib/domains/song";
+  import type { Track } from "$lib/domains/track";
+  import { createContextMenu, melt } from "@melt-ui/svelte";
+
+  const {
+    elements: { menu, item, trigger },
+  } = createContextMenu();
 
   export let scale: Scale;
-  export let song: Song;
+  export let track: Track;
   type Movable = 0 | 1 | "both";
   let moving: Option<Movable> = none;
 
   const moveWindow = (index: 0 | 1) => (delta: number) => {
-    const newValue = song.range[index] + calculateViewDomainDelta(scale, delta);
-    song.range[index] = constrainDomain(scale, newValue);
-    song.range = [...song.range];
+    const newValue =
+      track.range[index] + calculateViewDomainDelta(scale, delta);
+    track.range[index] = constrainDomain(scale, newValue);
+    track.range = [...track.range];
   };
 
   const { isMoved, drag: _drag } = useDrag(
@@ -46,35 +51,40 @@
 
   const selectThumb = (e: MouseEvent) => {
     if (!$isMoved) {
-      song.selected = !song.selected;
+      track.selected = !track.selected;
     }
   };
 
-  const { open } = useContextMenu();
-
-  $: range = mapViewDomainToRange(scale, song.range);
+  $: range = mapViewDomainToRange(scale, track.range);
 </script>
 
 <div class="track relative py-1 border border-light-grey -mt-[1px]">
   <div
     style={`${toTranslate(range)}${toWidth(range)}`}
     class={`flex gap-1 rounded ${
-      song.selected ? "bg-dodger-blue" : "bg-purple-taupe"
+      track.selected ? "bg-dodger-blue" : "bg-purple-taupe"
     }`}
   >
     <button class="h-10 p-1 cursor-col-resize" on:mousedown={drag(0)}>
       <div class="w-1 h-full rounded-full bg-white/60" />
     </button>
     <button
+      use:melt={$trigger}
       on:click={selectThumb}
-      on:contextmenu={open(song)}
       on:mousedown={drag("both")}
       class="flex-1 h-10 py-2 truncate"
     >
-      {song.name ?? ""}
+      {track.name ?? ""}
     </button>
     <button class="h-10 p-1 cursor-col-resize" on:mousedown={drag(1)}>
       <div class="w-1 h-full rounded-full bg-white/60" />
     </button>
   </div>
+</div>
+
+<div use:melt={$menu} class="menu">
+  <div class="item" use:melt={$item}>Expand timeline</div>
+  <div class="item" use:melt={$item}>Add track to prev</div>
+  <div class="item" use:melt={$item}>Add track to next</div>
+  <div class="item" use:melt={$item}>Remove track</div>
 </div>
