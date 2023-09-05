@@ -11,6 +11,7 @@
   import { useDrag } from "$lib/hooks/use_drag";
   import type { Track } from "$lib/domains/track";
   import { createContextMenu, melt } from "@melt-ui/svelte";
+  import { useVideoEditor } from "$lib/hooks/use_video_editor";
 
   const {
     elements: { menu, item, trigger },
@@ -20,6 +21,9 @@
   export let track: Track;
   type Movable = 0 | 1 | "both";
   let moving: Option<Movable> = none;
+
+  const { removeTrack, expandTimeline, addTrackToNext, addTrackToPrev } =
+    useVideoEditor();
 
   const moveWindow = (index: 0 | 1) => (delta: number) => {
     const newValue =
@@ -83,8 +87,16 @@
 </div>
 
 <div use:melt={$menu} class="menu">
-  <div class="item" use:melt={$item}>Expand timeline</div>
-  <div class="item" use:melt={$item}>Add track to prev</div>
-  <div class="item" use:melt={$item}>Add track to next</div>
-  <div class="item" use:melt={$item}>Remove track</div>
+  <button on:click={() => expandTimeline(track)} class="item" use:melt={$item}>
+    Expand timeline
+  </button>
+  <button on:click={() => addTrackToPrev(track)} class="item" use:melt={$item}>
+    Add track to prev
+  </button>
+  <button on:click={() => addTrackToNext(track)} class="item" use:melt={$item}>
+    Add track to next
+  </button>
+  <button on:click={() => removeTrack(track)} class="item" use:melt={$item}>
+    Remove track
+  </button>
 </div>

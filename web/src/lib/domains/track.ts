@@ -7,7 +7,7 @@ export interface Track {
 export function makeEmptyTrack(
   range: [number, number],
   selected: boolean = false
-) {
+): Track {
   return {
     range,
     selected,
