@@ -5,7 +5,7 @@
     IconPlayerSkipForward,
     IconPlayerPause,
     IconPhotoSensor,
-    IconShare,
+    IconBrandYoutube,
   } from "@tabler/icons-svelte";
   import { usePlayer } from "$lib/hooks/use_player";
   import { isNone } from "fp-ts/lib/Option";
@@ -75,7 +75,7 @@
         target="_blank"
         class="group"
       >
-        <IconShare class="icon-btn-stroke" />
+        <IconBrandYoutube class="icon-btn-stroke" />
       </a>
       <button
         class="group"

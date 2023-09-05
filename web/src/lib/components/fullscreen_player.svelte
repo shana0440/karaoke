@@ -4,8 +4,8 @@
     IconPlayerSkipForward,
     IconPlayerPause,
     IconPlayerPlay,
-    IconShare,
     IconX,
+    IconBrandYoutube,
   } from "@tabler/icons-svelte";
   import { getContext } from "svelte";
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
@@ -146,7 +146,7 @@
           target="_blank"
           class="group"
         >
-          <IconShare class="icon-btn-stroke" />
+          <IconBrandYoutube class="icon-btn-stroke" />
         </a>
         <button
           class="group"
