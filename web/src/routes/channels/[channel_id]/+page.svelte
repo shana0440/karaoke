@@ -3,6 +3,7 @@
   import { fetchChannel, fetchChannelClips } from "$lib/api/api";
   import ClipItem from "$lib/components/clip_item.svelte";
   import TimeFormat from "$lib/components/time_format.svelte";
+  import { addToast } from "$lib/components/toaster.svelte";
   import { sizeBanner, type ChannelWithBanner } from "$lib/domains/channel";
   import type { Clip } from "$lib/domains/clip";
   import { useApi } from "$lib/hooks/use_api";
@@ -27,6 +28,12 @@
 
   const addAllClipsToQueue = () => {
     clips.forEach(add);
+    addToast({
+      data: {
+        message: `Added to Queue`,
+        intent: "success",
+      },
+    });
   };
 
   const apiClient = useApi();

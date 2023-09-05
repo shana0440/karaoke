@@ -11,6 +11,7 @@
   import { useQueue } from "$lib/hooks/use_queue";
   import { usePlayer } from "$lib/hooks/use_player";
   import { fly } from "svelte/transition";
+  import { addToast } from "./toaster.svelte";
 
   export let clip: Clip;
   export let index: number;
@@ -56,7 +57,19 @@
 
 {#if $open}
   <div class="menu" use:melt={$menu} transition:fly={{ duration: 150, y: -10 }}>
-    <button class="item" use:melt={$item} on:click={() => add(clip)}>
+    <button
+      class="item"
+      use:melt={$item}
+      on:click={() => {
+        add(clip);
+        addToast({
+          data: {
+            message: `Added to Queue`,
+            intent: "success",
+          },
+        });
+      }}
+    >
       <IconPlaylistAdd class="w-6 h-6" />
       Add to Queue
     </button>
