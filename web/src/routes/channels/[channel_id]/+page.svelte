@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { fetchChannel, fetchChannelClips } from "$lib/api/api";
   import ClipItem from "$lib/components/clip_item.svelte";
-  import TimeFormat from "$lib/components/time_format.svelte";
+  import InfiniteScroll from "$lib/components/infinite_scroll.svelte";
   import { addToast } from "$lib/components/toaster.svelte";
   import { sizeBanner, type ChannelWithBanner } from "$lib/domains/channel";
   import type { Clip } from "$lib/domains/clip";
@@ -13,6 +13,8 @@
   import { some, none, type Option, isSome } from "fp-ts/Option";
   import { dropLeft } from "fp-ts/lib/Array";
   import { onMount } from "svelte";
+  import { hasMore as hasMorePage } from "$lib/domains/pagination";
+  import Spinner from "$lib/components/spinner.svelte";
 
   const id = $page.params.channel_id ?? "";
   const { add } = useQueue();
@@ -20,6 +22,9 @@
 
   let channel: Option<ChannelWithBanner> = none;
   let clips: Clip[] = [];
+  let hasMore = true;
+  let offset = 0;
+  let loading = false;
 
   const playAllClips = () => {
     play(clips[0]);
@@ -37,12 +42,30 @@
   };
 
   const apiClient = useApi();
+  const loadMoreClips = () => {
+    if (loading) {
+      return;
+    }
+    loading = true;
+    fetchChannelClips(apiClient, { channelId: id, offset })
+      .then((resp) => {
+        clips = [...clips, ...resp.data];
+        hasMore = hasMorePage(resp);
+        offset = resp.offset + resp.limit;
+      })
+      .finally(() => {
+        loading = false;
+      });
+  };
+
   onMount(() => {
     fetchChannel(apiClient, { channelId: id }).then((resp) => {
       channel = some(resp);
     });
-    fetchChannelClips(apiClient, { channelId: id }).then((resp) => {
+    fetchChannelClips(apiClient, { channelId: id, offset }).then((resp) => {
       clips = resp.data;
+      hasMore = hasMorePage(resp);
+      offset = resp.offset + resp.limit;
     });
   });
 </script>
@@ -98,6 +121,9 @@
           {:else}
             <li>Channel is Empty</li>
           {/each}
+          <InfiniteScroll {hasMore} loadMore={loadMoreClips}>
+            <Spinner />
+          </InfiniteScroll>
         </ul>
       </section>
     </div>

@@ -11,7 +11,7 @@
     <p class="text-2xl text-center">
       Input a youtube url and start mark the singing section
     </p>
-    <div class="input">
+    <div class="max-w-4xl input">
       <IconSearch class="w-6 h-6" />
       <input
         on:keypress={handleKey(["Enter"], (e) => {

@@ -4,3 +4,7 @@ export interface Pagination<T> {
   limit: number;
   data: T[];
 }
+
+export function hasMore(pagination: Pagination<any>) {
+  return pagination.total > pagination.offset + pagination.limit;
+}
