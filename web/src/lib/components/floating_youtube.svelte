@@ -14,10 +14,20 @@
   import Youtube from "./youtube.svelte";
   import type { YouTubePlayer } from "youtube-player/dist/types";
   import { usePlayer } from "$lib/hooks/use_player";
-  import { isNone, isSome } from "fp-ts/lib/Option";
+  import { isNone, isSome, match } from "fp-ts/lib/Option";
+  import { pipe } from "fp-ts/lib/function";
 
-  const { playingClip, tick, onPlay, onPause, onSyncToProgressBar } =
-    usePlayer();
+  const {
+    playingClip,
+    tick,
+    onPlay,
+    onPause,
+    onSyncToProgressBar,
+    syncToProgressBar,
+    pause,
+    isPause,
+    play,
+  } = usePlayer();
   let ytPlayer: YouTubePlayer;
   let ytBox: HTMLDivElement;
   let currentTime: number = 0;
@@ -37,6 +47,38 @@
     tick(currentTime);
   }
 
+  const controlVideo = (e: KeyboardEvent) => {
+    const element = e.target as HTMLElement;
+    if (
+      element.tagName.toLowerCase() === "input" ||
+      element.hasAttribute("contenteditable")
+    ) {
+      return;
+    }
+
+    pipe(
+      $playingClip,
+      match(
+        () => {},
+        (clip) => {
+          if (e.key === "ArrowLeft") {
+            syncToProgressBar(Math.max(currentTime - 5, clip.start_at));
+          }
+          if (e.key === "ArrowRight") {
+            syncToProgressBar(Math.min(currentTime + 5, clip.end_at));
+          }
+          if (e.key === " ") {
+            if ($isPause) {
+              play();
+            } else {
+              pause();
+            }
+          }
+        }
+      )
+    );
+  };
+
   onMount(() => {
     const unsubscribePlay = onPlay(() => {
       ytPlayer.playVideo();
@@ -54,10 +96,12 @@
         ytPlayer.seekTo(time, true);
       }, 0);
     });
+    window.addEventListener("keydown", controlVideo);
     return () => {
       unsubscribePause();
       unsubscribePlay();
       unsubscribeSync();
+      window.removeEventListener("keydown", controlVideo);
     };
   });
 </script>
