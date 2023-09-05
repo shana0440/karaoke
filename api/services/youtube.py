@@ -34,3 +34,12 @@ def extract_video_id_from_url(url):
     if end == -1:
         end = len(url)
     return url[start:end]
+
+
+def get_highest_thumbnail_url(resource):
+    return (
+        (resource.thumbnails.standard and resource.thumbnails.standard.url)
+        or (resource.thumbnails.high and resource.thumbnails.high.url)
+        or (resource.thumbnails.medium and resource.thumbnails.medium.url)
+        or resource.thumbnails.default.url
+    )

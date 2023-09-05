@@ -24,8 +24,8 @@ def upgrade() -> None:
         sa.Column('id', sa.Integer(), primary_key=True),
         sa.Column('name', sa.String(), nullable=False),
         sa.Column('video_id', sa.Integer(), nullable=False),
-        sa.Column('start_at', sa.Integer(), nullable=False),
-        sa.Column('end_at', sa.Integer(), nullable=False),
+        sa.Column('start_at', sa.Float(), nullable=False),
+        sa.Column('end_at', sa.Float(), nullable=False),
         sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.Column('updated_at', sa.DateTime(), nullable=True),
     )

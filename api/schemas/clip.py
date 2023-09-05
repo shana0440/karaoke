@@ -6,6 +6,6 @@ class ClipSchema(BaseSchema):
     id: int
     name: str
     video_id: int
-    start_at: int
-    end_at: int
+    start_at: float
+    end_at: float
     video: VideoSchema

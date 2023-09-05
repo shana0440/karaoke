@@ -3,7 +3,12 @@ from pydantic import BaseModel
 from typing import List
 from database.session import open_session
 from models import Video, Clip, Channel
-from services.youtube import get_channel_info, get_video_info, extract_video_id_from_url
+from services.youtube import (
+    get_channel_info,
+    get_video_info,
+    extract_video_id_from_url,
+    get_highest_thumbnail_url,
+)
 from schemas.clip import ClipSchema
 from query.pagination import paginate
 
@@ -12,8 +17,8 @@ router = APIRouter()
 
 class ClipEntity(BaseModel):
     name: str
-    start_at: int
-    end_at: int
+    start_at: float
+    end_at: float
 
 
 class CreateClipsRequest(BaseModel):
@@ -34,7 +39,7 @@ def create_clips(body: CreateClipsRequest):
             channel = Channel(
                 resource_id=video_info.channelId,
                 title=channel_info.title,
-                thumbnail_url=channel_info.thumbnails.default.url,
+                thumbnail_url=get_highest_thumbnail_url(channel_info),
                 custom_url=channel_info.customUrl,
             )
             session.add(channel)
@@ -44,7 +49,7 @@ def create_clips(body: CreateClipsRequest):
             resource_id=id,
             title=video_info.title,
             channel_id=channel.id,
-            video_thumbnail=video_info.thumbnails.default.url,
+            video_thumbnail=get_highest_thumbnail_url(video_info),
         )
         session.add(video)
         session.flush()
