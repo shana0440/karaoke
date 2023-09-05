@@ -27,7 +27,7 @@
   </div>
   <section class="flex flex-col gap-4">
     <h1 class="text-2xl font-semibold">Channel</h1>
-    <div class="grid grid-cols-5 gap-6">
+    <div class="grid gap-6 lg:grid-cols-5 md:grid-cols-3">
       {#each channels as channel (channel)}
         <ChannelCard {channel} />
       {/each}

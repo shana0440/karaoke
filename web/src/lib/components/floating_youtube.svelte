@@ -45,7 +45,14 @@
       ytPlayer.pauseVideo();
     });
     const unsubscribeSync = onSyncToProgressBar((time) => {
-      ytPlayer.seekTo(time, true);
+      setTimeout(() => {
+        // FIXME: remove listener after trigger
+        // youtube player api didn't provide unsubscribe method
+        ytPlayer.on("apiChange", () => {
+          ytPlayer.seekTo(time, true);
+        });
+        ytPlayer.seekTo(time, true);
+      }, 0);
     });
     return () => {
       unsubscribePause();
