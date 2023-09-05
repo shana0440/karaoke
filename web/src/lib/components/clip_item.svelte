@@ -26,21 +26,20 @@
 </script>
 
 <div
-  role="button"
-  tabindex="-1"
-  on:click={() => {
-    play(clip);
-  }}
-  on:keydown={() => {}}
   class="flex items-center gap-2 px-8 py-4 transition-colors rounded-md group bg-charcoal hover:bg-cod-gray"
 >
   <p class="flex items-center justify-center w-8 text-light-grey">
     <span class="transition-opacity group-hover:opacity-0">
       {index}
     </span>
-    <IconPlayerPlay
-      class="absolute w-5 h-5 transition-opacity opacity-0 group-hover:opacity-100 fill-alice-blue stroke-alice-blue"
-    />
+    <button
+      on:click={() => {
+        play(clip);
+      }}
+      class="absolute transition-all opacity-0 group-hover:opacity-100 hover:scale-125"
+    >
+      <IconPlayerPlay class="w-5 h-5 fill-alice-blue stroke-alice-blue" />
+    </button>
   </p>
   <span class="flex-1">{clip.name}</span>
   <span class="text-light-grey">
