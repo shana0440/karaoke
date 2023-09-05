@@ -11,6 +11,7 @@
   import type { Track } from "$lib/domains/track";
   import { isSome, match, some } from "fp-ts/Option";
   import { pipe } from "fp-ts/lib/function";
+  import TimeEditable from "./time_editable.svelte";
 
   export let domain: [number, number];
   export let currentTime: number;
@@ -96,7 +97,7 @@
 
 <div class="overflow-hidden">
   <div class="flex">
-    <div>
+    <div class="-mr-[1px]">
       <div class="h-10 w-96" />
       {#each $tracks as track}
         <div
@@ -112,9 +113,9 @@
               placeholder="Unknown"
             />
             <div class="text-sm text-light-grey">
-              <TimeFormat value={track.range[0]} />
+              <TimeEditable bind:time={track.range[0]} />
               ~
-              <TimeFormat value={track.range[1]} />
+              <TimeEditable bind:time={track.range[1]} />
               (<TimeFormat value={track.range[1] - track.range[0]} />)
             </div>
           </div>

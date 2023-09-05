@@ -12,6 +12,7 @@
   import { predict, saveClips } from "$lib/api/api";
   import { useVideoEditor } from "$lib/hooks/use_video_editor";
   import Tooltip from "./tooltip.svelte";
+  import TimeFormat from "./time_format.svelte";
 
   export let player: YouTubePlayer;
   export let duration: number;
@@ -85,7 +86,9 @@
       </button>
     </Tooltip>
   </div>
-  <div class="flex items-center justify-center">01:10</div>
+  <div class="flex items-center justify-center">
+    <TimeFormat value={currentTime} />
+  </div>
   <div class="flex justify-end gap-2">
     <Tooltip description="Predict Tracks">
       <button class="btn" on:click={handlePredict}>
