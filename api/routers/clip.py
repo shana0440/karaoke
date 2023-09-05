@@ -66,5 +66,5 @@ def create_clips(body: CreateClipsRequest):
 @router.get("/clips")
 def get_clips(limit: int = 20, offset: int = 0):
     with open_session() as session:
-        query = session.query(Clip)
+        query = session.query(Clip).order_by(Clip.created_at.desc())
         return paginate(query, limit, offset, ClipSchema)
