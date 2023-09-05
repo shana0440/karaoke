@@ -30,7 +30,8 @@
     <li>
       <a
         class="nav-link"
-        class:active={$page.url.pathname === "/search"}
+        class:active={$page.url.pathname === "/search" ||
+          $page.url.pathname.startsWith("/channels")}
         href="/search"
       >
         <IconSearch />Search

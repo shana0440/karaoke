@@ -112,3 +112,24 @@ export function fetchChannel(
       return resp.data as ChannelWithBanner;
     });
 }
+
+export function fetchChannelClips(
+  apiClient: AxiosInstance,
+  data: {
+    channelId: number | string;
+    limit?: number;
+    offset?: number;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/channels/${data.channelId}/clips`,
+      params: {
+        limit: data.limit,
+        offset: data.offset,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Pagination<Clip>;
+    });
+}
