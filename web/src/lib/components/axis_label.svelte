@@ -10,12 +10,12 @@
   export let value: number;
   export let scale: Scale;
 
-  const getAxisRange = (value: number): [number, number] => {
+  const getAxisRange = (scale: Scale, value: number): [number, number] => {
     const range = mapViewDomainToRange(scale, [value, value]);
     // 32 is half of label width
     return [range[0] - 32, range[1] + 32];
   };
-  $: axisRange = getAxisRange(value);
+  $: axisRange = getAxisRange(scale, value);
   $: labelOffset =
     axisRange[0] < scale.range[0]
       ? -axisRange[0]

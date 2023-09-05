@@ -64,10 +64,7 @@
   $: range = mapViewDomainToRange(scale, track.range);
 </script>
 
-<div
-  class="track relative py-1 border border-light-grey -mt-[1px]"
-  use:melt={$trigger}
->
+<div class="relative py-1 track" use:melt={$trigger}>
   <div
     style={`${toTranslate(range)}${toWidth(range)}`}
     class={`flex gap-1 rounded ${

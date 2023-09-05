@@ -27,6 +27,13 @@ export function reScale(scale: Scale, domain: [number, number]): Scale {
   };
 }
 
+export function reRange(scale: Scale, range: [number, number]): Scale {
+  return {
+    ...scale,
+    range,
+  };
+}
+
 export function toTranslate(range: [number, number]): string {
   return `transform: translateX(${range[0]}px);`;
 }

@@ -1,7 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { IconPlayerPlay } from "@tabler/icons-svelte";
-  import { makeScale, reScale, mapRangeToViewDomain } from "$lib/scale/scale";
+  import {
+    makeScale,
+    reScale,
+    mapRangeToViewDomain,
+    reRange,
+  } from "$lib/scale/scale";
   import Slider from "./slider.svelte";
   import TrackView from "./track.svelte";
   import XAxis from "./x_axis.svelte";
@@ -12,6 +17,7 @@
   import { isSome, match, some } from "fp-ts/Option";
   import { pipe } from "fp-ts/lib/function";
   import TimeEditable from "./time_editable.svelte";
+  import { get } from "svelte/store";
 
   export let domain: [number, number];
   export let currentTime: number;
@@ -90,61 +96,100 @@
     }
   };
 
+  const changeScaleRange = () => {
+    scale.update((prev) =>
+      pipe(
+        prev,
+        match(
+          () => prev,
+          (scale) => some(reRange(scale, [0, container.clientWidth]))
+        )
+      )
+    );
+  };
+
   onMount(() => {
     scale.set(some(makeScale(domain, [0, container.clientWidth])));
+    window.addEventListener("resize", changeScaleRange);
+    return () => {
+      window.removeEventListener("resize", changeScaleRange);
+    };
   });
 </script>
 
-<div class="overflow-hidden">
-  <div class="flex">
-    <div class="-mr-[1px]">
-      <div class="h-10 w-96" />
-      {#each $tracks as track}
-        <div
-          class="h-[50px] px-2 py-1 -mt-[1px] border border-light-grey flex gap-2 items-center"
-        >
-          <button on:click={playSong(track)}>
-            <IconPlayerPlay class="w-6 h-6" />
-          </button>
-          <div>
-            <input
-              class="bg-transparent"
-              bind:value={track.name}
-              placeholder="Unknown"
-            />
-            <div class="text-sm text-light-grey">
-              <TimeEditable bind:time={track.range[0]} />
-              ~
-              <TimeEditable bind:time={track.range[1]} />
-              (<TimeFormat value={track.range[1] - track.range[0]} />)
-            </div>
-          </div>
-        </div>
-      {/each}
-    </div>
-    <div class="relative flex-1 overflow-hidden" bind:this={container}>
+<div class="relative h-full">
+  <div class="absolute inset-0 flex pointer-events-none">
+    <div class="pointer-events-none w-96" />
+    <div class="relative flex-1 overflow-hidden">
       {#if isSome($scale)}
         <Indicator
           scale={$scale.value}
           value={currentTime}
           {onCurrentTimeChange}
         />
-        <XAxis
-          scale={$scale.value}
-          {onCurrentTimeChange}
-          onWheel={scaleOrMoveTimeline}
-        />
-        <div on:wheel={scaleOrMoveTimeline}>
-          {#each $tracks as track}
-            <TrackView bind:track bind:scale={$scale.value} {currentTime} />
-          {/each}
-        </div>
-        <Slider
-          bind:value={$scale.value.viewDomain}
-          min={domain[0]}
-          max={domain[1]}
-        />
       {/if}
     </div>
+  </div>
+  <div class="flex flex-col h-full overflow-hidden">
+    <div class="flex">
+      <div class="h-10 w-96" />
+      <div class="flex-1" bind:this={container}>
+        {#if isSome($scale)}
+          <XAxis
+            scale={$scale.value}
+            {onCurrentTimeChange}
+            onWheel={scaleOrMoveTimeline}
+          />
+        {/if}
+      </div>
+    </div>
+    <div class="flex-grow min-h-0 overflow-y-auto basis-0">
+      <div>
+        {#if isSome($scale)}
+          {#each $tracks as track}
+            <div class="flex border border-light-grey">
+              <div
+                class="h-[50px] px-2 py-1 flex gap-2 items-center w-96 border-r border-light-grey"
+              >
+                <button on:click={playSong(track)}>
+                  <IconPlayerPlay class="w-6 h-6" />
+                </button>
+                <div>
+                  <input
+                    class="bg-transparent"
+                    bind:value={track.name}
+                    placeholder="Unknown"
+                  />
+                  <div class="text-sm text-light-grey">
+                    <TimeEditable bind:time={track.range[0]} />
+                    ~
+                    <TimeEditable bind:time={track.range[1]} />
+                    (<TimeFormat value={track.range[1] - track.range[0]} />)
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex-1 overflow-hidden"
+                on:wheel={scaleOrMoveTimeline}
+              >
+                <TrackView bind:track bind:scale={$scale.value} {currentTime} />
+              </div>
+            </div>
+          {/each}
+        {/if}
+      </div>
+    </div>
+    {#if isSome($scale)}
+      <div class="flex">
+        <div class="w-96" />
+        <div class="flex-1">
+          <Slider
+            bind:value={$scale.value.viewDomain}
+            min={domain[0]}
+            max={domain[1]}
+          />
+        </div>
+      </div>
+    {/if}
   </div>
 </div>

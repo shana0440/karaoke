@@ -28,7 +28,7 @@
 </script>
 
 <VideoEditor>
-  <div class="flex flex-col w-full overflow-hidden">
+  <div class="flex flex-col w-full h-full">
     <div class="flex gap-2 h-[400px] overflow-hidden">
       <div class="h-full overflow-auto w-96">
         <h2>Most Like Comment</h2>
@@ -38,12 +38,14 @@
         <VideoPreview bind:player bind:duration {id} bind:currentTime />
       </div>
     </div>
-    {#if duration}
-      <Tracks
-        domain={[0, duration]}
-        {currentTime}
-        onCurrentTimeChange={udpateYoutubeCurrentTime}
-      />
-    {/if}
+    <div class="flex-1">
+      {#if duration}
+        <Tracks
+          domain={[0, duration]}
+          {currentTime}
+          onCurrentTimeChange={udpateYoutubeCurrentTime}
+        />
+      {/if}
+    </div>
   </div>
 </VideoEditor>

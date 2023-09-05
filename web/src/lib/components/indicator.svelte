@@ -42,7 +42,7 @@
 </script>
 
 <button
-  class="absolute z-10 flex flex-col items-center h-full mt-5"
+  class="absolute z-10 flex flex-col items-center h-[calc(100%-20px)] mt-5 pointer-events-auto"
   style={toTranslate(range)}
   on:mousedown={drag}
 >
