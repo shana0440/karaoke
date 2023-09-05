@@ -13,6 +13,11 @@
   import { useVideoEditor } from "$lib/hooks/use_video_editor";
   import Tooltip from "./tooltip.svelte";
   import TimeFormat from "./time_format.svelte";
+  import { addToast } from "./toaster.svelte";
+  import {
+    hideLoadingOverlay,
+    showLoadingOverlay,
+  } from "./loading_overlay.svelte";
 
   export let player: YouTubePlayer;
   export let duration: number;
@@ -29,6 +34,7 @@
   const apiClient = useApi();
   const handlePredict = async () => {
     const url = await player.getVideoUrl();
+    showLoadingOverlay();
     predict(apiClient, { url })
       .then((resp) => {
         tracks.set(
@@ -40,7 +46,7 @@
             }))
         );
       })
-      .finally(() => {});
+      .finally(hideLoadingOverlay);
   };
 
   const saveTracks = async () => {
@@ -51,6 +57,13 @@
         startAt: song.range[0],
         endAt: song.range[1],
       })),
+    }).then(() => {
+      addToast({
+        data: {
+          intent: "success",
+          message: "Saved",
+        },
+      });
     });
   };
 

@@ -5,11 +5,13 @@
   import FloatingYoutube from "$lib/components/floating_youtube.svelte";
   import Sidebar from "$lib/components/sidebar.svelte";
   import Toaster from "$lib/components/toaster.svelte";
+  import LoadingOverlay from "$lib/components/loading_overlay.svelte";
 
   let isFullScreenPlayerOpen: boolean = false;
 </script>
 
 <Toaster />
+<LoadingOverlay />
 <FloatingYoutube>
   <div class="flex flex-col h-screen gap-2 p-2">
     <div class="flex flex-1 gap-2 overflow-hidden">
