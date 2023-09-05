@@ -37,7 +37,7 @@
 
 {#if isSome($playingClip)}
   <div
-    class={`fixed inset-0 flex flex-col backdrop-blur-2xl transition-all z-10 p-2 ${
+    class={`fixed inset-0 flex flex-col bg-jet/50 backdrop-blur-2xl transition-all z-10 p-2 ${
       isFullScreenPlayerOpen
         ? "translate-y-0 opacity-100"
         : "pointer-events-none translate-y-1/3 opacity-0"
@@ -92,18 +92,20 @@
         </div>
         <div class="self-start w-[600px] h-full flex flex-col gap-4">
           <h2 class="text-2xl font-semibold">Queue</h2>
-          <div class="relative flex-1 overflow-auto">
-            <ul class="flex flex-col gap-2">
-              {#each $queue as clip, i (clip)}
-                <li>
-                  <QueueItem index={i + 1} {clip} />
-                </li>
-              {:else}
-                <li>Queue is Empty</li>
-              {/each}
-            </ul>
+          <div class="relative flex-1 min-h-0">
+            <div class="h-full overflow-auto">
+              <ul class="flex flex-col gap-2">
+                {#each $queue as clip, i (clip)}
+                  <li>
+                    <QueueItem index={i + 1} {clip} />
+                  </li>
+                {:else}
+                  <li>Queue is Empty</li>
+                {/each}
+              </ul>
+            </div>
             <div
-              class="pointer-events-none absolute -inset-x-2.5 -bottom-2.5 h-1/3 bg-gradient-to-t from-jet to-jet/0"
+              class="pointer-events-none absolute -inset-x-2.5 -bottom-2.5 h-1/3 bg-gradient-to-t from-jet/50 to-jet/0 rounded-b-lg"
             />
           </div>
         </div>
