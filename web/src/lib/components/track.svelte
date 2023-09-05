@@ -19,6 +19,8 @@
 
   export let scale: Scale;
   export let track: Track;
+  export let currentTime: number;
+
   type Movable = 0 | 1 | "both";
   let moving: Option<Movable> = none;
 
@@ -89,6 +91,24 @@
 <div use:melt={$menu} class="menu">
   <button on:click={() => expandTimeline(track)} class="item" use:melt={$item}>
     Expand timeline
+  </button>
+  <button
+    on:click={() => {
+      track.range[0] = currentTime;
+    }}
+    class="item"
+    use:melt={$item}
+  >
+    Start at current time
+  </button>
+  <button
+    on:click={() => {
+      track.range[1] = currentTime;
+    }}
+    class="item"
+    use:melt={$item}
+  >
+    End at current time
   </button>
   <button on:click={() => addTrackToPrev(track)} class="item" use:melt={$item}>
     Add track to prev

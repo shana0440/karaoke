@@ -136,7 +136,7 @@
         />
         <div on:wheel={scaleOrMoveTimeline}>
           {#each $tracks as track}
-            <TrackView bind:track bind:scale={$scale.value} />
+            <TrackView bind:track bind:scale={$scale.value} {currentTime} />
           {/each}
         </div>
         <Slider
