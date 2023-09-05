@@ -84,7 +84,7 @@
         <img
           src={channel.value.thumbnail_url}
           alt={channel.value.title}
-          class="w-40 aspect-auto rounded-2xl"
+          class="w-40 shadow-xl shadow-gunmetal aspect-auto rounded-2xl"
         />
         <div class="flex-1">
           <div class="flex flex-col gap-2 w-max">
