@@ -26,7 +26,7 @@
   {:else}
     <div class="flex gap-2 w-72">
       <img
-        class="rounded h-14 aspect-auto"
+        class="object-cover rounded h-14 aspect-auto"
         src={$playingClip.value.video.video_thumbnail}
         alt={$playingClip.value.video.title}
       />
