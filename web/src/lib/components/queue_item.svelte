@@ -11,6 +11,7 @@
   import type { Clip } from "$lib/domains/clip";
   import TimeFormat from "./time_format.svelte";
   import { usePlayer } from "$lib/hooks/use_player";
+  import { slide } from "svelte/transition";
 
   export let index: number;
   export let clip: Clip;
@@ -27,6 +28,7 @@
 <div
   role="button"
   tabindex="-1"
+  transition:slide={{ duration: 300 }}
   on:click={() => {
     play(clip);
     remove(clip);
