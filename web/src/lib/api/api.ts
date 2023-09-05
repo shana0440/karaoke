@@ -1,4 +1,5 @@
 import type { Clip } from "$lib/domains/clip";
+import type { Channel, ChannelWithBanner } from "$lib/domains/channel";
 import type { Comment } from "$lib/domains/comment";
 import type { Pagination } from "$lib/domains/pagination";
 import axios, { type AxiosInstance } from "axios";
@@ -78,4 +79,36 @@ export function saveClips(
       })),
     },
   });
+}
+
+export function fetchChannels(
+  apiClient: AxiosInstance,
+  data: {
+    limit?: number;
+    offset?: number;
+  }
+) {
+  return apiClient
+    .request({
+      url: "/channels",
+      params: data,
+    })
+    .then((resp) => {
+      return resp.data as Pagination<Channel>;
+    });
+}
+
+export function fetchChannel(
+  apiClient: AxiosInstance,
+  data: {
+    channelId: number | string;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/channels/${data.channelId}`,
+    })
+    .then((resp) => {
+      return resp.data as ChannelWithBanner;
+    });
 }

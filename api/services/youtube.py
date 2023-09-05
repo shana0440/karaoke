@@ -14,6 +14,15 @@ def get_channel_info(channel_id: str):
     return result.items[0].snippet if len(result.items) > 0 else None
 
 
+def get_channel_banner_url(channel_id: str):
+    result = yt.channels.list(channel_id=channel_id)
+    return (
+        result.items[0].brandingSettings.image.bannerExternalUrl
+        if len(result.items) > 0
+        else None
+    )
+
+
 def get_video_most_like_comment(video_id: str):
     result = yt.commentThreads.list(video_id=video_id, order="relevance")
     if len(result.items) == 0:

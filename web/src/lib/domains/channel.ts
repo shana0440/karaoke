@@ -5,3 +5,11 @@ export interface Channel {
   custom_url: string;
   resource_id: string;
 }
+
+export interface ChannelWithBanner extends Channel {
+  banner_url: string;
+}
+
+export function sizeBanner(url: string, width: number) {
+  return `${url}=w${width}`;
+}
