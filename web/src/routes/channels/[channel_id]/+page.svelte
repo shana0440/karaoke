@@ -6,13 +6,28 @@
   import { sizeBanner, type ChannelWithBanner } from "$lib/domains/channel";
   import type { Clip } from "$lib/domains/clip";
   import { useApi } from "$lib/hooks/use_api";
+  import { usePlayer } from "$lib/hooks/use_player";
+  import { useQueue } from "$lib/hooks/use_queue";
+  import { IconPlayerPlay, IconPlaylistAdd } from "@tabler/icons-svelte";
   import { some, none, type Option, isSome } from "fp-ts/Option";
+  import { dropLeft } from "fp-ts/lib/Array";
   import { onMount } from "svelte";
 
   const id = $page.params.channel_id ?? "";
+  const { add } = useQueue();
+  const { play } = usePlayer();
 
   let channel: Option<ChannelWithBanner> = none;
   let clips: Clip[] = [];
+
+  const playAllClips = () => {
+    play(clips[0]);
+    dropLeft(1)(clips).forEach(add);
+  };
+
+  const addAllClipsToQueue = () => {
+    clips.forEach(add);
+  };
 
   const apiClient = useApi();
   onMount(() => {
@@ -41,15 +56,30 @@
           alt={channel.value.title}
           class="w-40 aspect-auto rounded-2xl"
         />
-        <div class="flex flex-col gap-2">
-          <a
-            href="https://www.youtube.com/{channel.value.custom_url}"
-            target="_blank"
-            class="flex items-center gap-2 text-2xl text-alice-blue hover:underline underline-offset-4"
+        <div class="flex-1">
+          <div class="flex flex-col gap-2 w-max">
+            <a
+              href="https://www.youtube.com/{channel.value.custom_url}"
+              target="_blank"
+              class="flex items-center gap-2 text-2xl text-alice-blue hover:underline underline-offset-4"
+            >
+              {channel.value.title}
+            </a>
+            <p class="text-light-grey">{channel.value.custom_url}</p>
+          </div>
+        </div>
+        <div class="flex gap-4 pb-4">
+          <button class="items-center px-6 py-2 btn" on:click={playAllClips}>
+            <IconPlayerPlay class="w-4 h-4 fill-alice-blue stroke-alice-blue" />
+            Play
+          </button>
+          <button
+            class="items-center px-6 py-2 btn"
+            on:click={addAllClipsToQueue}
           >
-            {channel.value.title}
-          </a>
-          <p class="text-light-grey">{channel.value.custom_url}</p>
+            <IconPlaylistAdd />
+            Add to Queue
+          </button>
         </div>
       </section>
       <section class="py-4">
