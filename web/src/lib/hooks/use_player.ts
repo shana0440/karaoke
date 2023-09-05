@@ -1,6 +1,6 @@
 import type { Clip } from "$lib/domains/clip";
-import { get, writable } from "svelte/store"
-import { some, type Option, isSome, none } from "fp-ts/Option"
+import { get, writable } from "svelte/store";
+import { some, type Option, isSome, none } from "fp-ts/Option";
 import { useQueue } from "./use_queue";
 import { last } from "fp-ts/Array";
 import { pipe } from "fp-ts/function";
@@ -23,10 +23,21 @@ let previousClips: Clip[] = [];
 export function usePlayer() {
   const { queue, remove, add } = useQueue();
 
-  const play = (clip: Clip | undefined = undefined, saveToPreviousQueue: boolean = true) => {
+  const play = (
+    clip: Clip | undefined = undefined,
+    saveToPreviousQueue: boolean = true
+  ) => {
     if (clip) {
       if (saveToPreviousQueue) {
-        pipe(get(playingClip), match(() => { }, (clip) => { previousClips.push(clip) }))
+        pipe(
+          get(playingClip),
+          match(
+            () => {},
+            (clip) => {
+              previousClips.push(clip);
+            }
+          )
+        );
       }
       syncToProgressBar(clip.start_at);
       currentTime.set([clip.start_at]);
@@ -35,8 +46,8 @@ export function usePlayer() {
     } else {
       isPause.set(false);
     }
-    onPlayListeners.forEach(it => it())
-  }
+    onPlayListeners.forEach((it) => it());
+  };
 
   const playNext = () => {
     if (get(queue).length > 0) {
@@ -44,25 +55,34 @@ export function usePlayer() {
       play(nextClip);
       remove(nextClip);
     }
-  }
+  };
 
   const playPrev = () => {
-    pipe(get(playingClip), match(() => { }, (clip) => { add(clip) }))
+    pipe(
+      get(playingClip),
+      match(
+        () => {},
+        (clip) => {
+          add(clip);
+        }
+      )
+    );
     pipe(
       last(previousClips),
       match(
-        () => { },
+        () => {},
         (clip) => {
           play(clip, false);
-          previousClips = previousClips.filter((it) => it !== clip)
-        })
+          previousClips = previousClips.filter((it) => it !== clip);
+        }
+      )
     );
-  }
+  };
 
   const pause = () => {
     isPause.set(true);
-    onPauseListeners.forEach(it => it())
-  }
+    onPauseListeners.forEach((it) => it());
+  };
 
   const tick = (time: number) => {
     currentTime.set([time]);
@@ -71,32 +91,32 @@ export function usePlayer() {
       pause();
       playNext();
     }
-  }
+  };
 
   const syncToProgressBar = (time: number) => {
-    onSyncToProgressBarListeners.forEach(it => it(time))
-  }
+    onSyncToProgressBarListeners.forEach((it) => it(time));
+  };
 
   const onPlay = (listener: OnPlayListener) => {
     onPlayListeners.push(listener);
     return () => {
-      onPlayListeners.filter(it => it !== listener);
-    }
-  }
+      onPlayListeners.filter((it) => it !== listener);
+    };
+  };
 
   const onPause = (listener: OnPauseListener) => {
     onPauseListeners.push(listener);
     return () => {
-      onPauseListeners.filter(it => it !== listener);
-    }
-  }
+      onPauseListeners.filter((it) => it !== listener);
+    };
+  };
 
   const onSyncToProgressBar = (listener: OnSyncToProgressBarListener) => {
     onSyncToProgressBarListeners.push(listener);
     return () => {
-      onSyncToProgressBarListeners.filter(it => it !== listener);
-    }
-  }
+      onSyncToProgressBarListeners.filter((it) => it !== listener);
+    };
+  };
 
   return {
     playingClip,
@@ -111,5 +131,5 @@ export function usePlayer() {
     onPlay,
     onPause,
     onSyncToProgressBar,
-  }
+  };
 }
