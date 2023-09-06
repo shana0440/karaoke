@@ -66,6 +66,8 @@ export function usePlayer() {
       const nextClip = get(queue)[0];
       play(nextClip);
       remove(nextClip);
+    } else {
+      pause();
     }
   };
 
@@ -100,7 +102,6 @@ export function usePlayer() {
     currentTime.set([time]);
     const clip = get(playingClip);
     if (isSome(clip) && clip.value.end_at < time) {
-      pause();
       playNext();
     }
   };
