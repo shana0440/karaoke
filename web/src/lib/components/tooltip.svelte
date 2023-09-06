@@ -22,7 +22,11 @@
 </span>
 
 {#if $open}
-  <div use:melt={$content} transition:fade={{ duration: 100 }} class="menu">
+  <div
+    use:melt={$content}
+    transition:fade={{ duration: 100 }}
+    class="z-20 menu"
+  >
     <div use:melt={$arrow} />
     <p class="px-2 py-1 text-alice-blue">{description}</p>
   </div>

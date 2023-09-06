@@ -10,6 +10,7 @@
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
   import { fly } from "svelte/transition";
   import { useQueue } from "$lib/hooks/use_queue";
+  import Tooltip from "./tooltip.svelte";
 
   const { add } = useQueue();
   const { play } = usePlayer();
@@ -51,7 +52,9 @@
       </div>
     </div>
   </div>
-  <p class="font-semibold text-alice-blue">{clip.name}</p>
+  <Tooltip description={clip.name}>
+    <p class="font-semibold text-alice-blue line-clamp-2">{clip.name}</p>
+  </Tooltip>
   <p class="text-sm text-light-grey line-clamp-2">{clip.video.channel.title}</p>
 </div>
 

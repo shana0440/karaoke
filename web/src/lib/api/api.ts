@@ -275,3 +275,16 @@ export function fetchMVFromVideoURL(
       return resp.data as Mv;
     });
 }
+
+export function saveMvs(
+  apiClient: AxiosInstance,
+  data: { videoIds: string[] }
+) {
+  return apiClient.request({
+    method: "POST",
+    url: `/mvs`,
+    data: {
+      video_ids: data.videoIds,
+    },
+  });
+}

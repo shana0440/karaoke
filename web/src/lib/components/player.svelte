@@ -12,6 +12,7 @@
   import { isNone } from "fp-ts/lib/Option";
   import TimeFormat from "./time_format.svelte";
   import ProgressBar from "./progress_bar.svelte";
+  import Tooltip from "./tooltip.svelte";
 
   const {
     currentTime,
@@ -40,9 +41,11 @@
         alt={$playingClip.value.video.title}
       />
       <div class="flex flex-col justify-around">
-        <p class="font-semibold text-alice-blue line-clamp-1">
-          {$playingClip.value.name}
-        </p>
+        <Tooltip description={$playingClip.value.name}>
+          <p class="font-semibold text-alice-blue line-clamp-1">
+            {$playingClip.value.name}
+          </p>
+        </Tooltip>
         <p class="text-sm text-light-grey line-clamp-1">
           {$playingClip.value.video.channel.title}
         </p>
