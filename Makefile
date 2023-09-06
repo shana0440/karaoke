@@ -1,18 +1,7 @@
-.PHONY: clear
-clear:
-	-rm dataset/karaoke/karaoke*_out*.wav
-	-rm dataset/songs/song*_out*.wav
-	-rm dataset/zatsudan/zatsudan*_out*.wav
+.PHONY: setup
+setup:
+	conda env create --file=environment.yml --name=karaoke
 
-.PHONY: prepare
-prepare:
-	python prepare_karaoke.py
-
-.PHONY: train
-train:
-	python train_cnn.py
-
-.PHONY: predict
-predict:
-	python predict_karaoke.py
-	python post_process.py
+.PHONY: activate
+activate:
+	# conda activate karaoke # this not going to work, just remine me need to run this

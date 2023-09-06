@@ -5,3 +5,11 @@ dev:
 .PHONY: migrate
 migrate:
 	alembic upgrade head 
+
+.PHONY: prepare
+prepare:
+	python prepare_dataset.py
+
+.PHONY: train
+train:
+	python train_cnn.py
