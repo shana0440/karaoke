@@ -20,7 +20,11 @@ html {
   }
 
   .icon-btn-stroke {
-    @apply transition-colors stroke-light-grey group-hover:stroke-alice-blue;
+    @apply transition-colors [&>svg]:stroke-light-grey [&>svg]:hover:stroke-alice-blue;
+  }
+
+  .icon-btn-stroke.active {
+    @apply [&>svg]:stroke-alice-blue;
   }
 
   .icon-btn-fill {

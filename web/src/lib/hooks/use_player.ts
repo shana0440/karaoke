@@ -8,6 +8,7 @@ import { match } from "fp-ts/Option";
 
 const playingClip = writable<Option<Clip>>(none);
 const isPause = writable<boolean>(false);
+const isRepeatOnce = writable<boolean>(false);
 const currentTime = writable<number[]>([0]);
 
 type OnPlayListener = () => void;
@@ -50,7 +51,18 @@ export function usePlayer() {
   };
 
   const playNext = () => {
-    if (get(queue).length > 0) {
+    if (get(isRepeatOnce)) {
+      const nextClip = get(playingClip);
+      pipe(
+        nextClip,
+        match(
+          () => {},
+          (clip) => {
+            play(clip);
+          }
+        )
+      );
+    } else if (get(queue).length > 0) {
       const nextClip = get(queue)[0];
       play(nextClip);
       remove(nextClip);
@@ -122,6 +134,7 @@ export function usePlayer() {
     playingClip,
     currentTime,
     isPause,
+    isRepeatOnce,
     playNext,
     playPrev,
     play,

@@ -6,6 +6,7 @@
     IconPlayerPauseFilled,
     IconPlayerSkipBackFilled,
     IconPlayerSkipForwardFilled,
+    IconRepeatOnce,
   } from "@tabler/icons-svelte";
   import { getContext } from "svelte";
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
@@ -18,8 +19,16 @@
 
   export let isFullScreenPlayerOpen: boolean;
 
-  const { playingClip, isPause, currentTime, play, pause, playNext, playPrev } =
-    usePlayer();
+  const {
+    playingClip,
+    isPause,
+    currentTime,
+    isRepeatOnce,
+    play,
+    pause,
+    playNext,
+    playPrev,
+  } = usePlayer();
   const { queue } = useQueue();
 
   const { move } = getContext<FloatingYoutubeContext>("floating-yt");
@@ -70,9 +79,9 @@
             </p>
           </div>
 
-          <div class="flex items-center justify-center gap-2">
+          <div class="flex items-center justify-center gap-6">
             <button class="p-4 rounded-full group" on:click={playPrev}>
-              <IconPlayerSkipBackFilled class="icon-btn-fill" />
+              <IconPlayerSkipBackFilled class="w-8 h-8 icon-btn-fill" />
             </button>
             <button
               type="button"
@@ -80,13 +89,13 @@
               on:click={() => ($isPause ? play() : pause())}
             >
               {#if $isPause}
-                <IconPlayerPlayFilled class="icon-btn-fill" />
+                <IconPlayerPlayFilled class="w-10 h-10 icon-btn-fill" />
               {:else}
-                <IconPlayerPauseFilled class="icon-btn-fill" />
+                <IconPlayerPauseFilled class="w-10 h-10 icon-btn-fill" />
               {/if}
             </button>
             <button class="p-4 rounded-full group" on:click={playNext}>
-              <IconPlayerSkipForwardFilled class="icon-btn-fill" />
+              <IconPlayerSkipForwardFilled class="w-8 h-8 icon-btn-fill" />
             </button>
           </div>
         </div>
@@ -141,18 +150,25 @@
         </time>
       </div>
       <div class="flex items-center justify-end gap-4">
+        <button
+          class="icon-btn-stroke"
+          class:active={$isRepeatOnce}
+          on:click={() => isRepeatOnce.update((prev) => !prev)}
+        >
+          <IconRepeatOnce />
+        </button>
         <a
           href={`https://youtube.com/watch?v=${$playingClip.value.video.id}&t=${$playingClip.value.start_at}s"`}
           target="_blank"
-          class="group"
+          class="icon-btn-stroke"
         >
-          <IconBrandYoutube class="icon-btn-stroke" />
+          <IconBrandYoutube />
         </a>
         <button
-          class="group"
+          class="icon-btn-stroke"
           on:click={() => (isFullScreenPlayerOpen = !isFullScreenPlayerOpen)}
         >
-          <IconX class="icon-btn-stroke" />
+          <IconX />
         </button>
       </div>
     </div>

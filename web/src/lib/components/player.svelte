@@ -6,14 +6,23 @@
     IconPlayerPauseFilled,
     IconPhotoSensor,
     IconBrandYoutube,
+    IconRepeatOnce,
   } from "@tabler/icons-svelte";
   import { usePlayer } from "$lib/hooks/use_player";
   import { isNone } from "fp-ts/lib/Option";
   import TimeFormat from "./time_format.svelte";
   import ProgressBar from "./progress_bar.svelte";
 
-  const { currentTime, playingClip, isPause, playNext, playPrev, play, pause } =
-    usePlayer();
+  const {
+    currentTime,
+    playingClip,
+    isPause,
+    isRepeatOnce,
+    playNext,
+    playPrev,
+    play,
+    pause,
+  } = usePlayer();
 
   export let isFullScreenPlayerOpen: boolean;
 </script>
@@ -70,18 +79,25 @@
       </time>
     </div>
     <div class="flex items-center justify-end gap-4">
+      <button
+        class="icon-btn-stroke"
+        class:active={$isRepeatOnce}
+        on:click={() => isRepeatOnce.update((prev) => !prev)}
+      >
+        <IconRepeatOnce />
+      </button>
       <a
         href={`https://youtube.com/watch?v=${$playingClip.value.video.resource_id}&t=${$playingClip.value.start_at}s"`}
         target="_blank"
-        class="group"
+        class="icon-btn-stroke"
       >
-        <IconBrandYoutube class="icon-btn-stroke" />
+        <IconBrandYoutube />
       </a>
       <button
-        class="group"
+        class="icon-btn-stroke"
         on:click={() => (isFullScreenPlayerOpen = !isFullScreenPlayerOpen)}
       >
-        <IconPhotoSensor class="icon-btn-stroke" />
+        <IconPhotoSensor />
       </button>
     </div>
   {/if}
