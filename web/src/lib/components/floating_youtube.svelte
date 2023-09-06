@@ -16,6 +16,7 @@
   import { usePlayer } from "$lib/hooks/use_player";
   import { isNone, isSome, match } from "fp-ts/lib/Option";
   import { pipe } from "fp-ts/lib/function";
+  import PlayerStates from "youtube-player/dist/constants/PlayerStates";
 
   const {
     playingClip,
@@ -45,6 +46,18 @@
 
   $: {
     tick(currentTime);
+  }
+
+  $: {
+    if (ytPlayer) {
+      ytPlayer.on("stateChange", async (e) => {
+        if ((await ytPlayer.getPlayerState()) === PlayerStates.PAUSED) {
+          isPause.set(true);
+        } else {
+          isPause.set(false);
+        }
+      });
+    }
   }
 
   const controlVideo = (e: KeyboardEvent) => {
