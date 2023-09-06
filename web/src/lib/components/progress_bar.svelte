@@ -27,11 +27,16 @@
   }
 </script>
 
-<span use:melt={$root} class="relative flex items-center flex-1 group">
-  <span
-    class="block w-full h-1 transition rounded-full cursor-pointer bg-gunmetal group-hover:scale-y-[200%]"
-  >
-    <span use:melt={$range} class="h-1 rounded-full bg-alice-blue" />
+<span
+  use:melt={$root}
+  class="relative flex items-center justify-center flex-1 cursor-pointer group"
+>
+  <span class="flex items-center w-full h-5">
+    <span
+      class="block w-full h-1 transition rounded-full bg-gunmetal group-hover:scale-y-[200%]"
+    >
+      <span use:melt={$range} class="h-1 rounded-full bg-alice-blue" />
+    </span>
   </span>
   <span
     use:melt={$thumb()}
