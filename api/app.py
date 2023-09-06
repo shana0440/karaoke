@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import predict, clip, youtube, channel
+from routers import predict, clip, youtube, channel, video
 
 app = FastAPI()
 
@@ -8,6 +8,7 @@ app.include_router(predict.router)
 app.include_router(clip.router)
 app.include_router(youtube.router)
 app.include_router(channel.router)
+app.include_router(video.router)
 
 origins = [
     "http://localhost",
