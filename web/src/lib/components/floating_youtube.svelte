@@ -62,12 +62,15 @@
         () => {},
         (clip) => {
           if (e.key === "ArrowLeft") {
+            e.preventDefault();
             syncToProgressBar(Math.max(currentTime - 5, clip.start_at));
           }
           if (e.key === "ArrowRight") {
+            e.preventDefault();
             syncToProgressBar(Math.min(currentTime + 5, clip.end_at));
           }
           if (e.key === " ") {
+            e.preventDefault();
             if ($isPause) {
               play();
             } else {
