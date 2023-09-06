@@ -4,6 +4,7 @@ import type { Comment } from "$lib/domains/comment";
 import type { Pagination } from "$lib/domains/pagination";
 import axios, { type AxiosInstance } from "axios";
 import { none, some, type Option } from "fp-ts/Option";
+import type { Video } from "$lib/domains/video";
 
 export const apiClient = axios.create({
   baseURL: "http://localhost:8888",
@@ -125,6 +126,72 @@ export function fetchChannelClips(
     .request({
       url: `/channels/${data.channelId}/clips`,
       params: {
+        limit: data.limit,
+        offset: data.offset,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Pagination<Clip>;
+    });
+}
+
+export function searchChannels(
+  apiClient: AxiosInstance,
+  data: {
+    search: string;
+    limit?: number;
+    offset?: number;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/channels/search`,
+      params: {
+        q: data.search,
+        limit: data.limit,
+        offset: data.offset,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Pagination<Channel>;
+    });
+}
+
+export function searchVideos(
+  apiClient: AxiosInstance,
+  data: {
+    search: string;
+    limit?: number;
+    offset?: number;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/videos/search`,
+      params: {
+        q: data.search,
+        limit: data.limit,
+        offset: data.offset,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Pagination<Video>;
+    });
+}
+
+export function searchClips(
+  apiClient: AxiosInstance,
+  data: {
+    search: string;
+    limit?: number;
+    offset?: number;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/clips/search`,
+      params: {
+        q: data.search,
         limit: data.limit,
         offset: data.offset,
       },
