@@ -101,7 +101,7 @@ export function usePlayer() {
   const tick = (time: number) => {
     currentTime.set([time]);
     const clip = get(playingClip);
-    if (isSome(clip) && clip.value.end_at < time) {
+    if (isSome(clip) && clip.value.end_at <= time) {
       playNext();
     }
   };
