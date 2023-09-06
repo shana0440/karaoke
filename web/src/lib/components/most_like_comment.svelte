@@ -11,6 +11,13 @@
 
   const apiClient = useApi();
 
+  const pasteWithoutStyle = (e: ClipboardEvent) => {
+    e.preventDefault();
+    var text = e.clipboardData?.getData("text/plain");
+    const el = e.currentTarget as HTMLDivElement;
+    el.innerText = text ?? "";
+  };
+
   onMount(() => {
     fetchMostLikeComment(apiClient, { videoId }).then((mostLikeComment) => {
       comment = mostLikeComment;
@@ -19,7 +26,13 @@
 </script>
 
 {#if isSome(comment)}
-  <div>{@html comment.value.textDisplay}</div>
+  <div
+    class="h-full [&>*]:outline-none outline-none text-sm border border-transparent-red p-2"
+    contenteditable="true"
+    on:paste={pasteWithoutStyle}
+  >
+    {@html comment.value.textDisplay}
+  </div>
 {:else}
   <div>No Comment Yet</div>
 {/if}

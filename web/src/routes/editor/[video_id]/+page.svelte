@@ -30,9 +30,11 @@
 <VideoEditor>
   <div class="flex flex-col w-full h-full">
     <div class="flex gap-2 h-[400px] overflow-hidden">
-      <div class="h-full overflow-auto w-96">
-        <h2>Most Like Comment</h2>
-        <MostLikeComment videoId={id} />
+      <div class="flex flex-col h-full gap-2 overflow-auto w-96">
+        <h2 class="text-xl">Most Like Comment</h2>
+        <div class="flex-1 min-h-0">
+          <MostLikeComment videoId={id} />
+        </div>
       </div>
       <div class="flex flex-col flex-1 gap-2">
         <VideoPreview bind:player bind:duration {id} bind:currentTime />
