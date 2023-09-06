@@ -29,7 +29,7 @@ class CreateClipsRequest(BaseModel):
 @router.post("/clips", status_code=201)
 def create_clips(body: CreateClipsRequest):
     id = extract_video_id_from_url(body.stream_url)
-    video_info = get_video_info(id)
+    video_info = get_video_info(id).snippet
     channel_info = get_channel_info(video_info.channelId)
     with open_session() as session:
         channel = (

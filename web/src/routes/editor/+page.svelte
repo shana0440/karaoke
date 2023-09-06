@@ -1,6 +1,7 @@
 <script lang="ts">
   import { IconSearch } from "@tabler/icons-svelte";
   import { handleKey } from "$lib/doc/doc";
+  import { goto } from "$app/navigation";
 
   let error: string;
 </script>
@@ -19,7 +20,7 @@
             const url = new URL(e.currentTarget.value);
             const id = url.searchParams.get("v");
             if (id) {
-              window.location.href = `/editor/${id}`;
+              goto(`/editor/${id}`);
             } else {
               error = "Cannot found video id";
             }
@@ -29,6 +30,17 @@
         })}
       />
     </div>
+    <div class="flex items-center justify-center gap-6 px-20">
+      <div class="h-[1px] w-full bg-light-grey" />
+      <p>or</p>
+      <div class="h-[1px] w-full bg-light-grey" />
+    </div>
+    <a
+      href="/editor/mvs"
+      class="px-10 py-2 mx-auto text-2xl text-center transition-colors border rounded-md border-light-grey hover:bg-cod-gray"
+    >
+      Add MVs
+    </a>
     {#if error}
       <p class="text-center text-terracotta-red">{error}</p>
     {/if}

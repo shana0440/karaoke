@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fetchClips } from "$lib/api/api";
-  import ClipCard from "$lib/components/clip.svelte";
+  import ClipCard from "$lib/components/clip_card.svelte";
   import type { Clip } from "$lib/domains/clip";
   import { useApi } from "$lib/hooks/use_api";
   import { onMount } from "svelte";

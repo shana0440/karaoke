@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
   export type ToastData = {
     message: string;
-    intent: "success";
+    intent: "success" | "failed";
   };
 
   const {
@@ -44,6 +44,8 @@
             <span
               class="rounded-full w-2 h-2 {data.intent === 'success'
                 ? 'bg-green-500'
+                : data.intent === 'failed'
+                ? 'bg-terracotta-red'
                 : ''}"
             />
             {data.message}

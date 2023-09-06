@@ -3,8 +3,8 @@
   import YoutubePlayer from "youtube-player";
 
   export let id: string;
-  export let player: ReturnType<typeof YoutubePlayer>;
-  export let currentTime;
+  export let player: ReturnType<typeof YoutubePlayer> = null as any;
+  export let currentTime = 0;
 
   const elementId = `yt-${Date.now()}`;
 

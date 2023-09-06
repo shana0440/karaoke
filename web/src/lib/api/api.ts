@@ -5,6 +5,7 @@ import type { Pagination } from "$lib/domains/pagination";
 import axios, { type AxiosInstance } from "axios";
 import { none, some, type Option } from "fp-ts/Option";
 import type { Video } from "$lib/domains/video";
+import type { Mv } from "$lib/domains/mv";
 
 export const apiClient = axios.create({
   baseURL: "http://localhost:8888",
@@ -234,5 +235,43 @@ export function fetchVideoClips(
     })
     .then((resp) => {
       return resp.data as Pagination<Clip>;
+    });
+}
+
+export function fetchMVsFromChannelURL(
+  apiClient: AxiosInstance,
+  data: {
+    channelUrl: string;
+  }
+) {
+  return apiClient
+    .request({
+      method: "POST",
+      url: `/mvs/channel`,
+      data: {
+        channel_url: data.channelUrl,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Mv[];
+    });
+}
+
+export function fetchMVFromVideoURL(
+  apiClient: AxiosInstance,
+  data: {
+    videoUrl: string;
+  }
+) {
+  return apiClient
+    .request({
+      method: "POST",
+      url: `/mvs/video`,
+      data: {
+        video_url: data.videoUrl,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Mv;
     });
 }
