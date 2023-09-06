@@ -1,11 +1,11 @@
 <script lang="ts">
   import {
-    IconPlayerSkipBack,
-    IconPlayerSkipForward,
-    IconPlayerPause,
-    IconPlayerPlay,
+    IconPlayerPlayFilled,
     IconX,
     IconBrandYoutube,
+    IconPlayerPauseFilled,
+    IconPlayerSkipBackFilled,
+    IconPlayerSkipForwardFilled,
   } from "@tabler/icons-svelte";
   import { getContext } from "svelte";
   import type { FloatingYoutubeContext } from "./floating_youtube.svelte";
@@ -72,7 +72,7 @@
 
           <div class="flex items-center justify-center gap-2">
             <button class="p-4 rounded-full group" on:click={playPrev}>
-              <IconPlayerSkipBack class="icon-btn-fill icon-btn-stroke" />
+              <IconPlayerSkipBackFilled class="icon-btn-fill" />
             </button>
             <button
               type="button"
@@ -80,13 +80,13 @@
               on:click={() => ($isPause ? play() : pause())}
             >
               {#if $isPause}
-                <IconPlayerPlay class="icon-btn-fill icon-btn-stroke" />
+                <IconPlayerPlayFilled class="icon-btn-fill" />
               {:else}
-                <IconPlayerPause class="icon-btn-fill icon-btn-stroke" />
+                <IconPlayerPauseFilled class="icon-btn-fill" />
               {/if}
             </button>
             <button class="p-4 rounded-full group" on:click={playNext}>
-              <IconPlayerSkipForward class="icon-btn-fill icon-btn-stroke" />
+              <IconPlayerSkipForwardFilled class="icon-btn-fill" />
             </button>
           </div>
         </div>

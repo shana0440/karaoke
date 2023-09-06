@@ -9,7 +9,7 @@
   import { useApi } from "$lib/hooks/use_api";
   import { usePlayer } from "$lib/hooks/use_player";
   import { useQueue } from "$lib/hooks/use_queue";
-  import { IconPlayerPlay, IconPlaylistAdd } from "@tabler/icons-svelte";
+  import { IconPlayerPlayFilled, IconPlaylistAdd } from "@tabler/icons-svelte";
   import { some, none, type Option, isSome } from "fp-ts/Option";
   import { dropLeft } from "fp-ts/lib/Array";
   import { onMount } from "svelte";
@@ -100,7 +100,7 @@
         </div>
         <div class="flex gap-4 pb-4">
           <button class="items-center px-6 py-2 btn" on:click={playAllClips}>
-            <IconPlayerPlay class="w-4 h-4 fill-alice-blue stroke-alice-blue" />
+            <IconPlayerPlayFilled class="w-4 h-4 text-alice-blue" />
             Play
           </button>
           <button

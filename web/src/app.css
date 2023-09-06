@@ -24,7 +24,7 @@ html {
   }
 
   .icon-btn-fill {
-    @apply transition-colors fill-light-grey group-hover:fill-alice-blue;
+    @apply transition-colors text-light-grey group-hover:text-alice-blue;
   }
 
   .nav-link {

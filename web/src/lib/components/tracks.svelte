@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { IconPlayerPlay } from "@tabler/icons-svelte";
+  import { IconPlayerPlayFilled } from "@tabler/icons-svelte";
   import {
     makeScale,
     reScale,
@@ -152,7 +152,7 @@
                 class="h-[50px] px-2 py-1 flex gap-2 items-center w-96 border-r border-light-grey"
               >
                 <button on:click={playSong(track)}>
-                  <IconPlayerPlay class="w-6 h-6" />
+                  <IconPlayerPlayFilled class="w-6 h-6" />
                 </button>
                 <div>
                   <input

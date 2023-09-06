@@ -4,7 +4,7 @@
   import {
     IconBrandYoutube,
     IconDots,
-    IconPlayerPlay,
+    IconPlayerPlayFilled,
     IconPlaylistAdd,
   } from "@tabler/icons-svelte";
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
@@ -39,7 +39,7 @@
       }}
       class="absolute transition-all opacity-0 group-hover:opacity-100 hover:scale-125"
     >
-      <IconPlayerPlay class="w-5 h-5 fill-alice-blue stroke-alice-blue" />
+      <IconPlayerPlayFilled class="w-5 h-5 text-alice-blue" />
     </button>
   </p>
   <span class="flex-1">{clip.name}</span>

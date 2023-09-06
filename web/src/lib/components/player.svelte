@@ -1,9 +1,9 @@
 <script lang="ts">
   import {
-    IconPlayerPlay,
-    IconPlayerSkipBack,
-    IconPlayerSkipForward,
-    IconPlayerPause,
+    IconPlayerPlayFilled,
+    IconPlayerSkipBackFilled,
+    IconPlayerSkipForwardFilled,
+    IconPlayerPauseFilled,
     IconPhotoSensor,
     IconBrandYoutube,
   } from "@tabler/icons-svelte";
@@ -41,7 +41,7 @@
     </div>
     <div class="flex items-center justify-center gap-2">
       <button class="p-2 rounded-full group" on:click={playPrev}>
-        <IconPlayerSkipBack class="icon-btn-fill icon-btn-stroke" />
+        <IconPlayerSkipBackFilled class="icon-btn-fill" />
       </button>
       <button
         type="button"
@@ -49,13 +49,13 @@
         on:click={() => ($isPause ? play() : pause())}
       >
         {#if $isPause}
-          <IconPlayerPlay class="icon-btn-fill icon-btn-stroke" />
+          <IconPlayerPlayFilled class="icon-btn-fill" />
         {:else}
-          <IconPlayerPause class="icon-btn-fill icon-btn-stroke" />
+          <IconPlayerPauseFilled class="icon-btn-fill" />
         {/if}
       </button>
       <button class="p-2 rounded-full group" on:click={playNext}>
-        <IconPlayerSkipForward class="icon-btn-fill icon-btn-stroke" />
+        <IconPlayerSkipForwardFilled class="icon-btn-fill" />
       </button>
     </div>
     <div class="flex items-center flex-1 gap-5">
