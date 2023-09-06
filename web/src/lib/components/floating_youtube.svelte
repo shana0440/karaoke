@@ -28,6 +28,7 @@
     pause,
     isPause,
     play,
+    playNext,
   } = usePlayer();
   let ytPlayer: YouTubePlayer;
   let ytBox: HTMLDivElement;
@@ -51,10 +52,13 @@
   $: {
     if (ytPlayer) {
       ytPlayer.on("stateChange", async (e) => {
-        if ((await ytPlayer.getPlayerState()) === PlayerStates.PAUSED) {
+        const state = await ytPlayer.getPlayerState();
+        if (state === PlayerStates.PAUSED) {
           isPause.set(true);
-        } else {
+        } else if (state === PlayerStates.PLAYING) {
           isPause.set(false);
+        } else if (state === PlayerStates.ENDED) {
+          playNext();
         }
       });
     }
