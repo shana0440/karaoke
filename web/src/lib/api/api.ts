@@ -200,3 +200,39 @@ export function searchClips(
       return resp.data as Pagination<Clip>;
     });
 }
+
+export function fetchVideo(
+  apiClient: AxiosInstance,
+  data: {
+    videoId: number | string;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/videos/${data.videoId}`,
+    })
+    .then((resp) => {
+      return resp.data as Video;
+    });
+}
+
+export function fetchVideoClips(
+  apiClient: AxiosInstance,
+  data: {
+    videoId: number | string;
+    limit?: number;
+    offset?: number;
+  }
+) {
+  return apiClient
+    .request({
+      url: `/videos/${data.videoId}/clips`,
+      params: {
+        limit: data.limit,
+        offset: data.offset,
+      },
+    })
+    .then((resp) => {
+      return resp.data as Pagination<Clip>;
+    });
+}

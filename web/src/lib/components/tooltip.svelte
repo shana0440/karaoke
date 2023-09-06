@@ -17,9 +17,9 @@
   });
 </script>
 
-<div use:melt={$trigger}>
+<span class={$$restProps.class} use:melt={$trigger}>
   <slot />
-</div>
+</span>
 
 {#if $open}
   <div use:melt={$content} transition:fade={{ duration: 100 }} class="menu">

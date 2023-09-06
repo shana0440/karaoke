@@ -9,7 +9,7 @@ router = APIRouter()
 
 
 @router.get("/videos/search")
-def search_channels(q: str, limit: int = 20, offset: int = 0):
+def search_videos(q: str, limit: int = 20, offset: int = 0):
     with open_session() as session:
         search = f"%{q}%"
         query = (
@@ -24,3 +24,10 @@ def search_channels(q: str, limit: int = 20, offset: int = 0):
             .group_by(Video.id)
         )
         return paginate(query, limit, offset, VideoSchema)
+
+
+@router.get("/videos/{video_id}")
+def get_video(video_id: int):
+    with open_session() as session:
+        video = session.query(Video).filter_by(id=video_id).first()
+        return VideoSchema.model_validate(video)

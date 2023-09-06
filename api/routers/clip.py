@@ -71,7 +71,7 @@ def get_clips(limit: int = 20, offset: int = 0):
 
 
 @router.get("/clips/search")
-def search_channels(q: str, limit: int = 20, offset: int = 0):
+def search_clips(q: str, limit: int = 20, offset: int = 0):
     with open_session() as session:
         search = f"%{q}%"
         query = session.query(Clip).filter(
@@ -84,4 +84,11 @@ def search_channels(q: str, limit: int = 20, offset: int = 0):
 def get_channel_clips(channel_id: int, limit: int = 20, offset: int = 0):
     with open_session() as session:
         query = session.query(Clip).join(Clip.video).filter_by(channel_id=channel_id)
+        return paginate(query, limit, offset, ClipSchema)
+
+
+@router.get("/videos/{video_id}/clips")
+def get_video_clips(video_id: int, limit: int = 20, offset: int = 0):
+    with open_session() as session:
+        query = session.query(Clip).filter_by(video_id=video_id)
         return paginate(query, limit, offset, ClipSchema)
