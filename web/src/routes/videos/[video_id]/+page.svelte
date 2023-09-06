@@ -72,7 +72,7 @@
 </script>
 
 {#if isSome(video)}
-  <div class="flex flex-col bg-dark-slate-grey">
+  <div class="flex flex-col h-full bg-dark-slate-grey">
     <div class="sticky inset-x-0 top-0">
       <img
         src={video.value.video_thumbnail}

@@ -71,7 +71,7 @@
 </script>
 
 {#if isSome(channel)}
-  <div class="flex flex-col bg-dark-slate-grey">
+  <div class="flex flex-col h-full bg-dark-slate-grey">
     <div class="sticky inset-x-0 top-0">
       <img
         src={sizeBanner(channel.value.banner_url, 1707)}
