@@ -10,8 +10,9 @@
   import { createDropdownMenu, melt } from "@melt-ui/svelte";
   import { useQueue } from "$lib/hooks/use_queue";
   import { usePlayer } from "$lib/hooks/use_player";
-  import { fly } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
   import { addToast } from "./toaster.svelte";
+  import Playing from "./playing.svelte";
 
   export let clip: Clip;
   export let index: number;
@@ -23,24 +24,30 @@
     forceVisible: true,
   });
   const { add } = useQueue();
-  const { play } = usePlayer();
+  const { play, playingClip, isPlaying } = usePlayer();
 </script>
 
 <div
   class="flex items-center gap-2 px-8 py-4 transition-colors rounded-md group bg-charcoal hover:bg-cod-gray"
 >
   <p class="flex items-center justify-center w-8 text-light-grey">
-    <span class="transition-opacity group-hover:opacity-0">
-      {index}
-    </span>
-    <button
-      on:click={() => {
-        play(clip);
-      }}
-      class="absolute transition-all opacity-0 group-hover:opacity-100 hover:scale-125"
-    >
-      <IconPlayerPlayFilled class="w-5 h-5 text-alice-blue" />
-    </button>
+    {#if isPlaying($playingClip, clip)}
+      <div transition:fade>
+        <Playing />
+      </div>
+    {:else}
+      <span class="transition-opacity group-hover:opacity-0">
+        {index}
+      </span>
+      <button
+        on:click={() => {
+          play(clip);
+        }}
+        class="absolute transition-all opacity-0 group-hover:opacity-100 hover:scale-125"
+      >
+        <IconPlayerPlayFilled class="w-5 h-5 text-alice-blue" />
+      </button>
+    {/if}
   </p>
   <span class="flex-1">{clip.name}</span>
   <span class="text-light-grey">

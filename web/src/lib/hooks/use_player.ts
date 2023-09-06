@@ -130,6 +130,16 @@ export function usePlayer() {
     };
   };
 
+  const isPlaying = (playingClip: Option<Clip>, clip: Clip) => {
+    return pipe(
+      playingClip,
+      match(
+        () => false,
+        (playingClip) => playingClip.id === clip.id
+      )
+    );
+  };
+
   return {
     playingClip,
     currentTime,
@@ -144,5 +154,6 @@ export function usePlayer() {
     onPlay,
     onPause,
     onSyncToProgressBar,
+    isPlaying,
   };
 }
