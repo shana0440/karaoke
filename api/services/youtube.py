@@ -40,13 +40,22 @@ def get_channels_info(channel_ids: List[str]) -> List[Channel]:
     return channels
 
 
+# TODO: make cache stateless
+banner_url_cache = {}
+
+
 def get_channel_banner_url(channel_id: str):
+    if banner_url_cache.get(channel_id):
+        return banner_url_cache.get(channel_id)
+
     result = yt.channels.list(channel_id=channel_id)
-    return (
+    banner_url = (
         result.items[0].brandingSettings.image.bannerExternalUrl
         if len(result.items) > 0
         else None
     )
+    banner_url_cache[channel_id] = banner_url
+    return banner_url
 
 
 def get_video_most_like_comment(video_id: str):
