@@ -28,7 +28,7 @@
 </script>
 
 <div
-  class="flex items-center gap-2 px-8 py-4 transition-colors rounded-md group bg-charcoal hover:bg-cod-gray"
+  class="flex items-center gap-2 px-4 py-2 transition-colors rounded-md group bg-charcoal hover:bg-cod-gray"
 >
   <p class="flex items-center justify-center w-8 text-light-grey">
     {#if isPlaying($playingClip, clip)}
@@ -49,7 +49,14 @@
       </button>
     {/if}
   </p>
-  <span class="flex-1">{clip.name}</span>
+  <span class="flex flex-col flex-1 gap-1">
+    <span>
+      {clip.name}
+    </span>
+    <span class="text-xs text-light-grey">
+      {clip.video.channel.title}
+    </span>
+  </span>
   <span class="text-light-grey">
     <TimeFormat value={clip.end_at - clip.start_at} />
   </span>
