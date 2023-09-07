@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 import tensorflow.keras as keras
 import matplotlib.pyplot as plt
 import config
+import os
 
 
 def load_data(dataset_path):
@@ -64,7 +65,7 @@ def build_model(input_shape):
     # flatten the output and feed it into dense layer
     model.add(keras.layers.Flatten())
     model.add(keras.layers.Dense(64, activation="relu"))
-    model.add(keras.layers.Dropout(0.5))
+    model.add(keras.layers.Dropout(0.3))
 
     # output layer, 2 neurons to represent is karaoke or zatsudan
     model.add(keras.layers.Dense(2, activation="softmax"))
@@ -72,7 +73,7 @@ def build_model(input_shape):
     return model
 
 
-def plot_history(history):
+def save_and_show_plot_history(history):
     fig, axs = plt.subplots(2)
 
     # create accuracy subplot
@@ -90,6 +91,7 @@ def plot_history(history):
     axs[1].legend(loc="upper right")
     axs[1].set_title("Error eval")
 
+    plt.savefig(os.path.join(config.MODEL_PATH, "result"))
     plt.show()
 
 
@@ -118,7 +120,7 @@ if __name__ == "__main__":
         x_train,
         y_train,
         validation_data=(x_validation, y_validation),
-        epochs=50,
+        epochs=100,
         batch_size=32,
     )
 
@@ -130,4 +132,4 @@ if __name__ == "__main__":
     model.save(config.MODEL_PATH)
 
     # plot accuracy and error over the epochs
-    plot_history(history)
+    save_and_show_plot_history(history)
