@@ -16,6 +16,7 @@
   import { isSome } from "fp-ts/lib/Option";
   import TimeFormat from "./time_format.svelte";
   import ProgressBar from "./progress_bar.svelte";
+  import Tooltip from "./tooltip.svelte";
 
   export let isFullScreenPlayerOpen: boolean;
 
@@ -68,15 +69,21 @@
             />
           </div>
           <div class="flex flex-col gap-2">
-            <p class="font-semibold text-alice-blue">
-              {$playingClip.value.name}
-            </p>
-            <p class="text-sm text-light-grey line-clamp-1">
-              {$playingClip.value.video.channel.title}
-            </p>
-            <p class="text-sm text-light-grey line-clamp-1">
-              {$playingClip.value.video.title}
-            </p>
+            <Tooltip description={$playingClip.value.name}>
+              <p class="font-semibold text-alice-blue line-clamp-1">
+                {$playingClip.value.name}
+              </p>
+            </Tooltip>
+            <Tooltip description={$playingClip.value.video.channel.title}>
+              <p class="text-sm text-light-grey line-clamp-1">
+                {$playingClip.value.video.channel.title}
+              </p>
+            </Tooltip>
+            <Tooltip description={$playingClip.value.video.title}>
+              <p class="text-sm text-light-grey line-clamp-1">
+                {$playingClip.value.video.title}
+              </p>
+            </Tooltip>
           </div>
 
           <div class="flex items-center justify-center gap-6">
