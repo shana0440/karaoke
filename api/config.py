@@ -1,6 +1,7 @@
 import math
 
 DATASET_SOURCE = "dataset/source.json"
+TESTSET_SOURCE = "dataset/test.json"
 KARAOKE_DATASET_PATH = "dataset/karaoke"
 SONG_DATASET_PATH = "dataset/songs"
 ZATSUDAN_DATASET_PATH = "dataset/zatsudan"
@@ -8,16 +9,9 @@ JSON_PATH = "dataset/karaoke.json"
 MODEL_PATH = "dataset/models/karaoke_model"
 
 SAMPLE_RATE = 22050
-DURATION = 5
-SAMPLES_PER_TRACK = SAMPLE_RATE * DURATION
+SEGMENT_SECONDS = 1
 
 HOP_LENGTH = 512
-N_MFCC = 13
 N_FFT = 2048
-NUM_SEGMENTS = 5
-
-NUM_SAMPLES_PER_SEGMENT = int(SAMPLES_PER_TRACK / NUM_SEGMENTS)
-EXPECTED_NUM_MFCC_VECTORS_PER_SEGMENT = math.ceil(NUM_SAMPLES_PER_SEGMENT / HOP_LENGTH)
-SEGMENT_DURATION = "{}".format(DURATION * NUM_SEGMENTS)
 
 DB_URL = "sqlite:///karaoke.db"

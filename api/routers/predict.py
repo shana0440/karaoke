@@ -1,25 +1,71 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-import subprocess
-import os
-import librosa
-import tensorflow.keras as keras
+from functools import reduce
+import tensorflow as tf
 import numpy as np
 import config
-import utils
+from services.youtube import extract_video_id_from_url, download_audio
+from services.ffmpeg import convert_to_wav
+from train_model import preprocess
+from utils.threading import ThreadWithReturnValue
+from datetime import timedelta
+import json
 
 router = APIRouter()
 
-model = keras.models.load_model(config.MODEL_PATH)
+model = tf.keras.models.load_model(config.MODEL_PATH)
 model.summary()
 
 
-def remove_noise(periods):
+# Define a function to predict a single spectrogram
+def predict_feature(feature):
+    feature = feature[np.newaxis, ...]
+    prediction = model.predict(feature, verbose=0)
+    return prediction[0][0]
+
+
+# Define a function to predict a list of spectrograms using multiple threads
+def predict_features(features, chunk_size=500):
+    # Chunk the spectrograms into smaller lists
+    chunks = [features[i : i + chunk_size] for i in range(0, len(features), chunk_size)]
+
+    # Define a function to predict a single chunk of spectrograms
+    def predict_chunk(chunk):
+        return list(map(predict_feature, chunk))
+
+    # Create a thread for each chunk and start them all
+    threads = []
+    for chunk in chunks:
+        thread = ThreadWithReturnValue(target=predict_chunk, args=(chunk,))
+        thread.start()
+        threads.append(thread)
+
+    # Wait for all threads to finish and collect the results
+    results = reduce(lambda x, y: x + y, [thread.join() for thread in threads])
+
+    return results
+
+
+def remove_noise(periods, threshold=1):
     cleaned_periods = []
-    for start, end in periods:
-        if end - start > 50:
-            cleaned_periods.append([start, end])
-    return cleaned_periods 
+    for period in periods:
+        start, end = period
+        if end - start > threshold:
+            cleaned_periods.append(period)
+    return cleaned_periods
+
+
+def merge_close_periods(periods, threshold=2):
+    merged_periods = []
+    current_period = periods[0]
+    for next_period in periods[1:]:
+        if next_period[0] - current_period[1] <= threshold:
+            current_period[1] = next_period[1]
+        else:
+            merged_periods.append(current_period)
+            current_period = next_period
+    merged_periods.append(current_period)
+    return merged_periods
 
 
 class YoutubeURL(BaseModel):
@@ -28,57 +74,42 @@ class YoutubeURL(BaseModel):
 
 @router.post("/predict/")
 async def predict(youtube_url: YoutubeURL):
-    id = utils.extract_youtube_id(youtube_url.url)
-    name, out_name = ("{}/karaoke_{}".format(config.KARAOKE_DATASET_PATH, id), "{}/karaoke_{}_out".format(config.KARAOKE_DATASET_PATH, id))
-    subprocess.run(["yt-dlp", "-f", "wv", "-f", "ba", youtube_url.url, "-o", "{}.webm".format(name)])
-    subprocess.run(["ffmpeg", "-n", "-i", "{}.webm".format(name), "-acodec", "pcm_s16le", "-ar", "44100", "{}.wav".format(name)])
-    subprocess.run(["ffmpeg", "-n", "-i", "{}.wav".format(name), "-f", "segment", "-segment_time", config.SEGMENT_DURATION, "-c", "copy", "{}%04d.wav".format(out_name)])
-    
-    out_files = [f for f in os.listdir(config.KARAOKE_DATASET_PATH) if os.path.basename(out_name) in f]
-    out_files.sort()
+    id = extract_video_id_from_url(youtube_url.url)
+    path = "{}/karaoke_{}.webm".format(config.KARAOKE_DATASET_PATH, id)
+    print("download audio")
+    download_audio(youtube_url.url, path)
+    print("convert to wav")
+    wav_file = convert_to_wav(path, config.SAMPLE_RATE)
+    print("preprocess")
+    features = np.array(preprocess(wav_file))
+    print("predict")
+    predictions = predict_features(features)
 
-    predictions = []
-    for j, filename in enumerate(out_files):
-        filepath = os.path.join(config.KARAOKE_DATASET_PATH, filename)
-        signal, sr = librosa.load(filepath, sr=config.SAMPLE_RATE)
-
-        mfcc_set = []
-        for s in range(config.NUM_SEGMENTS):
-            start_sample = config.NUM_SAMPLES_PER_SEGMENT * s
-            finish_sample = start_sample + config.NUM_SAMPLES_PER_SEGMENT
-
-            mfcc = librosa.feature.mfcc(y=signal[start_sample:finish_sample], sr=sr, n_fft=config.N_FFT, n_mfcc=config.N_MFCC, hop_length=config.HOP_LENGTH)
-            mfcc = mfcc.T
-
-            if len(mfcc) == config.EXPECTED_NUM_MFCC_VECTORS_PER_SEGMENT:
-                mfcc_set.append(mfcc.tolist())
-
-
-        inputs = np.array(mfcc_set)
-        inputs = inputs[..., np.newaxis]
-
-        for k, x_test in enumerate(inputs):
-            x_test = x_test[np.newaxis, ...]
-            prediction = model.predict(x_test)
-            predicted_index = np.argmax(prediction, axis=1)
-            predictions.append(predicted_index[0])
+    predictions_with_time = [
+        {"time": str(timedelta(seconds=i)), "prediction": str(p)}
+        for i, p in enumerate(predictions)
+    ]
+    with open(f"predictions/{id}.json", "w") as fp:
+        json.dump({"predictions": predictions_with_time}, fp, indent=2)
 
     # Determine when the streamer starts and stops singing
     singing_periods = []
     start_singing = None
     for idx, pred in enumerate(predictions):
-        if pred == 0 and start_singing is None:  # Streamer starts singing
-            start_singing = idx * 5  # Each prediction corresponds to a 5 second interval
-        elif pred == 1 and start_singing is not None:  # Streamer stops singing
-            end_singing = idx * 5
+        if pred != 0 and start_singing is None:  # Streamer starts singing
+            start_singing = idx * config.SEGMENT_SECONDS
+        elif pred == 0 and start_singing is not None:  # Streamer stops singing
+            end_singing = idx * config.SEGMENT_SECONDS
             singing_periods.append([start_singing, end_singing])
             start_singing = None
     # If the streamer is still singing at the end of the stream
     if start_singing is not None:
-        singing_periods.append([start_singing, len(predictions) * 5])
+        singing_periods.append(
+            [start_singing, len(predictions) * config.SEGMENT_SECONDS]
+        )
 
-    timeslots = remove_noise(singing_periods)
-    
+    timeslots = singing_periods
+    timeslots = merge_close_periods(timeslots, 10)
+    # timeslots = remove_noise(timeslots, 5)
+
     return {"timeslots": timeslots}
-
-

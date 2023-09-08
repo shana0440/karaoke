@@ -2,6 +2,7 @@ from pyyoutube import Client, Channel, Video
 from typing import List
 import config
 import re
+import subprocess
 
 yt = Client(api_key=config.YOUTUBE_API_KEY)
 
@@ -131,3 +132,24 @@ def continue_fetch(fetch):
         if not page_token:
             break
     return results
+
+
+def get_video_url(video_id: str):
+    return f"https://www.youtube.com/watch?v={video_id}"
+
+
+def download_audio(url: str, output: str):
+    subprocess.run(
+        [
+            "yt-dlp",
+            "-f",
+            "wv",
+            "-f",
+            "ba",
+            url,
+            "-o",
+            output,
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
