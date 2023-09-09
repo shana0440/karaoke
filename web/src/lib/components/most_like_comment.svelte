@@ -27,7 +27,7 @@
 
 {#if isSome(comment)}
   <div
-    class="h-full [&>*]:outline-none outline-none text-sm border border-transparent-red p-2"
+    class="[&>*]:outline-none outline-none text-sm p-2"
     contenteditable="true"
     on:paste={pasteWithoutStyle}
   >

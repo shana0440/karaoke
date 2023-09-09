@@ -30,9 +30,9 @@
 <VideoEditor>
   <div class="flex flex-col w-full h-full">
     <div class="flex gap-2 h-[400px] overflow-hidden">
-      <div class="flex flex-col h-full gap-2 overflow-auto w-96">
+      <div class="flex flex-col h-full gap-2 w-96">
         <h2 class="text-xl">Most Like Comment</h2>
-        <div class="flex-1 min-h-0">
+        <div class="flex-1 min-h-0 border border-transparent-red overflow-auto">
           <MostLikeComment videoId={id} />
         </div>
       </div>
