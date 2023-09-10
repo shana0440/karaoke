@@ -17,7 +17,6 @@
   import { isSome, match, some } from "fp-ts/Option";
   import { pipe } from "fp-ts/lib/function";
   import TimeEditable from "./time_editable.svelte";
-  import { get } from "svelte/store";
 
   export let domain: [number, number];
   export let currentTime: number;

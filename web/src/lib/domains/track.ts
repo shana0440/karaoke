@@ -9,7 +9,7 @@ export function makeEmptyTrack(
   selected: boolean = false
 ): Track {
   return {
-    range,
+    range: [...range],
     selected,
   };
 }
