@@ -20,6 +20,7 @@
   export let scale: Scale;
   export let track: Track;
   export let currentTime: number;
+  export let index: number;
 
   type Movable = 0 | 1 | "both";
   let moving: Option<Movable> = none;
@@ -64,10 +65,11 @@
   $: range = mapViewDomainToRange(scale, track.range);
 </script>
 
-<div class="relative py-1 track" use:melt={$trigger}>
+<div class="track-container relative py-1" use:melt={$trigger}>
   <div
     style={`${toTranslate(range)}${toWidth(range)}`}
-    class={`flex gap-1 rounded ${
+    data-index={index}
+    class={`flex gap-1 rounded track ${
       track.selected ? "bg-dodger-blue" : "bg-purple-taupe"
     }`}
   >

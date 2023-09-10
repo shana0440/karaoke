@@ -54,7 +54,7 @@
       {clip.name}
     </span>
     <span class="text-xs text-light-grey">
-      {clip.video.channel.title}
+      {clip.video.title}
     </span>
   </span>
   <span class="text-light-grey">

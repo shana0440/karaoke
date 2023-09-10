@@ -17,6 +17,7 @@
   import { isSome, match, some } from "fp-ts/Option";
   import { pipe } from "fp-ts/lib/function";
   import TimeEditable from "./time_editable.svelte";
+  import Selection from "./selection.svelte";
 
   export let domain: [number, number];
   export let currentTime: number;
@@ -107,6 +108,15 @@
     );
   };
 
+  let selectContainer: HTMLDivElement;
+
+  const toggleTrackSelection = (selected: boolean) => (el: HTMLElement) => {
+    const index = el.dataset.index ? parseInt(el.dataset.index) : null;
+    if (index !== null) {
+      $tracks[index].selected = selected;
+    }
+  };
+
   onMount(() => {
     scale.set(some(makeScale(domain, [0, container.clientWidth])));
     window.addEventListener("resize", changeScaleRange);
@@ -142,11 +152,23 @@
         {/if}
       </div>
     </div>
-    <div class="flex-grow min-h-0 overflow-y-auto basis-0">
-      <div>
+    <div
+      class="flex-grow min-h-0 overflow-y-auto basis-0"
+      bind:this={selectContainer}
+    >
+      <div class="relative">
+        {#if selectContainer}
+          <Selection
+            container={selectContainer}
+            onSelect={toggleTrackSelection(true)}
+            onUnSelect={toggleTrackSelection(false)}
+            targetClass=".track"
+            dragableClass=".track-container"
+          />
+        {/if}
         {#if isSome($scale)}
-          {#each $tracks as track}
-            <div class="flex border border-light-grey">
+          {#each $tracks as track, i}
+            <div class="flex border border-light-grey -mb-[1px]">
               <div
                 class="h-[50px] px-2 py-1 flex gap-2 items-center w-96 border-r border-light-grey"
               >
@@ -171,7 +193,12 @@
                 class="flex-1 overflow-hidden"
                 on:wheel={scaleOrMoveTimeline}
               >
-                <TrackView bind:track bind:scale={$scale.value} {currentTime} />
+                <TrackView
+                  index={i}
+                  bind:track
+                  bind:scale={$scale.value}
+                  {currentTime}
+                />
               </div>
             </div>
           {/each}
