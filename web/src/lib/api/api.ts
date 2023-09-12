@@ -8,7 +8,7 @@ import type { Video } from "$lib/domains/video";
 import type { Mv } from "$lib/domains/mv";
 
 export const apiClient = axios.create({
-  baseURL: "http://localhost:8888",
+  baseURL: import.meta.env.VITE_API_ENDPOINT,
   headers: {
     "Content-Type": "application/json",
   },
