@@ -9,3 +9,6 @@ class ClipSchema(BaseSchema):
     start_at: float
     end_at: float
     video: VideoSchema
+
+    class Config:
+        orm_mode = True

@@ -8,6 +8,9 @@ class ChannelSchema(BaseSchema):
     custom_url: str
     resource_id: str
 
+    class Config:
+        orm_mode = True
+
 
 class ChannelWithBannerSchema(ChannelSchema):
     banner_url: str

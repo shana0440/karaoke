@@ -30,4 +30,4 @@ def search_videos(q: str, limit: int = 20, offset: int = 0):
 def get_video(video_id: int):
     with open_session() as session:
         video = session.query(Video).filter_by(id=video_id).first()
-        return VideoSchema.model_validate(video)
+        return VideoSchema.from_orm(video)

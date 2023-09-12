@@ -10,5 +10,5 @@ def paginate(query: Query, limit: int, offset: int, schema: BaseModel):
         total=total,
         limit=limit,
         offset=offset,
-        data=[schema.model_validate(it) for it in data],
+        data=[schema.from_orm(it) for it in data],
     )

@@ -9,3 +9,6 @@ class VideoSchema(BaseSchema):
     channel_id: int
     video_thumbnail: str
     channel: ChannelSchema
+
+    class Config:
+        orm_mode = True

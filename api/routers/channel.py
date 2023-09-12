@@ -42,4 +42,4 @@ def get_channel(channel_id: int):
         channel = session.query(Channel).filter_by(id=channel_id).first()
         banner_url = get_channel_banner_url(channel_id=channel.resource_id)
         channel.banner_url = banner_url
-        return ChannelWithBannerSchema.model_validate(channel)
+        return ChannelWithBannerSchema.from_orm(channel)

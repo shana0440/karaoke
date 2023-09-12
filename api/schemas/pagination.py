@@ -7,3 +7,6 @@ class PaginationSchema(BaseModel):
     offset: int
     limit: int
     data: List[Any]
+
+    class Config:
+        orm_mode = True
