@@ -9,7 +9,7 @@
   import { usePlayer } from "$lib/hooks/use_player";
   import { useQueue } from "$lib/hooks/use_queue";
   import { IconPlayerPlayFilled, IconPlaylistAdd } from "@tabler/icons-svelte";
-  import { some, none, type Option, isSome } from "fp-ts/Option";
+  import { some, none, type Option, isSome } from "fp-ts/lib/Option";
   import { dropLeft } from "fp-ts/lib/Array";
   import { onMount } from "svelte";
   import { hasMore as hasMorePage } from "$lib/domains/pagination";

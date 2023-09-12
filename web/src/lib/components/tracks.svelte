@@ -14,7 +14,7 @@
   import Indicator from "./indicator.svelte";
   import { useVideoEditor } from "$lib/hooks/use_video_editor";
   import type { Track } from "$lib/domains/track";
-  import { isSome, match, some } from "fp-ts/Option";
+  import { isSome, match, some } from "fp-ts/lib/Option";
   import { pipe } from "fp-ts/lib/function";
   import TimeEditable from "./time_editable.svelte";
   import Selection from "./selection.svelte";

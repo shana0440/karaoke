@@ -3,7 +3,7 @@ import type { Channel, ChannelWithBanner } from "$lib/domains/channel";
 import type { Comment } from "$lib/domains/comment";
 import type { Pagination } from "$lib/domains/pagination";
 import axios, { type AxiosInstance } from "axios";
-import { none, some, type Option } from "fp-ts/Option";
+import { none, some, type Option } from "fp-ts/lib/Option";
 import type { Video } from "$lib/domains/video";
 import type { Mv } from "$lib/domains/mv";
 

@@ -1,10 +1,9 @@
 import type { Clip } from "$lib/domains/clip";
 import { get, writable } from "svelte/store";
-import { some, type Option, isSome, none } from "fp-ts/Option";
+import { match, some, type Option, isSome, none } from "fp-ts/lib/Option";
 import { useQueue } from "./use_queue";
-import { last } from "fp-ts/Array";
-import { pipe } from "fp-ts/function";
-import { match } from "fp-ts/Option";
+import { last } from "fp-ts/lib/Array";
+import { pipe } from "fp-ts/lib/function";
 
 const playingClip = writable<Option<Clip>>(none);
 const isPause = writable<boolean>(false);

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { isOverlayWithRect, normalizeRect, type Rect } from "$lib/doc/rect";
-  import { none, some, match, type Option, isSome } from "fp-ts/Option";
+  import { none, some, match, type Option, isSome } from "fp-ts/lib/Option";
   import { pipe } from "fp-ts/lib/function";
   import { onMount } from "svelte";
 

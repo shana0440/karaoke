@@ -12,7 +12,7 @@
   import { onMount } from "svelte";
   import { page } from "$app/stores";
   import { debounce } from "lodash";
-  import { none, type Option, some, isSome } from "fp-ts/Option";
+  import { none, type Option, some, isSome } from "fp-ts/lib/Option";
   import type { Clip } from "$lib/domains/clip";
   import type { Video } from "$lib/domains/video";
   import ClipItem from "$lib/components/clip_item.svelte";

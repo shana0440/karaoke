@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
   import { makeEmptyTrack, type Track } from "$lib/domains/track";
   import { reScale, type Scale } from "$lib/scale/scale";
-  import { none, type Option, match, some } from "fp-ts/Option";
+  import { none, type Option, match, some } from "fp-ts/lib/Option";
   import { pipe } from "fp-ts/lib/function";
   import { setContext } from "svelte";
   import { get, writable, type Writable } from "svelte/store";

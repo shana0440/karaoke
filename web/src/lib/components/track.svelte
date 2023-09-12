@@ -7,7 +7,7 @@
     constrainDomain,
     toWidth,
   } from "$lib/scale/scale";
-  import { type Option, none, some, isSome } from "fp-ts/Option";
+  import { type Option, none, some, isSome } from "fp-ts/lib/Option";
   import { useDrag } from "$lib/hooks/use_drag";
   import type { Track } from "$lib/domains/track";
   import { createContextMenu, melt } from "@melt-ui/svelte";

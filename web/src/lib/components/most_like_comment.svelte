@@ -2,7 +2,7 @@
   import { fetchMostLikeComment } from "$lib/api/api";
   import type { Comment } from "$lib/domains/comment";
   import { useApi } from "$lib/hooks/use_api";
-  import { isSome, none, type Option } from "fp-ts/Option";
+  import { isSome, none, type Option } from "fp-ts/lib/Option";
   import { onMount } from "svelte";
 
   export let videoId: string;
